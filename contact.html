@@ -76,7 +76,7 @@
             <div class="channel-val" title="naveenkrishnamurthy2006@gmail.com">naveenkrishnamurthy2006@gmail.com</div>
             <div class="channel-sub">
               <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10B981;"></span>
-              Active response (< 24h)
+              Active response (&lt; 24h)
             </div>
           </div>
         </div>
@@ -326,15 +326,6 @@
                 <span>Engineer / Peer / Visitor</span>
               </button>
             </div>
-          </div>
-
-          <!-- Destination Info Banner -->
-          <div style="font-size: 0.825rem; color: #0B1F3A; margin-bottom: 20px; background: #F4F7FB; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid #DCE4EE; display: flex; align-items: center; gap: 8px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0B1F3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-            <span id="roleNoticeText">Routing to <strong>naveenkrishnamurthy2006@gmail.com</strong> with real-time Supabase sync.</span>
           </div>
 
           <!-- The Form -->
@@ -617,7 +608,6 @@
       var interestedFields = document.getElementById("interestedFieldsContainer");
       var formTitle = document.getElementById("formHeadingTitle");
       var formSubtitle = document.getElementById("formHeadingSubtitle");
-      var roleNotice = document.getElementById("roleNoticeText");
       var btnSubmitText = document.getElementById("btnSubmitQueryText");
       var hiddenPersona = document.getElementById("hiddenSenderPersona");
       var hiddenSubject = document.getElementById("hiddenFormSubject");
@@ -633,7 +623,6 @@
         if (interestedFields) interestedFields.style.display = "none";
         if (formTitle) formTitle.textContent = "Recruiter & Opportunity Inquiry";
         if (formSubtitle) formSubtitle.innerHTML = "Connect regarding <strong>VLSI internships, entry-level engineering roles</strong>, or recruitment interviews.";
-        if (roleNotice) roleNotice.innerHTML = "Routing to <strong>naveenkrishnamurthy2006@gmail.com</strong> with real-time Supabase sync.";
         if (btnSubmitText) btnSubmitText.textContent = "Submit Recruiter Inquiry";
         if (hiddenPersona) hiddenPersona.value = "Recruiter";
         if (hiddenSubject) hiddenSubject.value = "New Recruiter Inquiry for Naveena K";
@@ -652,7 +641,6 @@
         if (interestedFields) interestedFields.style.display = "block";
         if (formTitle) formTitle.textContent = "Technical & Collaboration Inquiry";
         if (formSubtitle) formSubtitle.innerHTML = "Send a message about <strong>VLSI projects, FPGA design, research papers</strong>, or engineering networking.";
-        if (roleNotice) roleNotice.innerHTML = "Routing to <strong>naveenkrishnamurthy2006@gmail.com</strong> with real-time Supabase sync.";
         if (btnSubmitText) btnSubmitText.textContent = "Send Collaboration Message";
         if (hiddenPersona) hiddenPersona.value = "Interested Party";
         if (hiddenSubject) hiddenSubject.value = "New Inquiry / Collaboration Message for Naveena K";
