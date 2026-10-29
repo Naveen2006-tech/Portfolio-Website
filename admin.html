@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Naveena K Portfolio</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230F62FE'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='46' font-family='sans-serif' font-weight='bold' fill='white'>NK</text></svg>" />
+  <style>
+    .add-form-card {
+      background: #0E203C;
+      border: 1px solid rgba(15, 98, 254, 0.4);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    }
+    .custom-item-card {
+      background: #0D1C34;
+      border: 1px solid rgba(69, 137, 255, 0.25);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+    .custom-item-card:hover {
+      border-color: rgba(69, 137, 255, 0.5);
+    }
+    .item-deleted-overlay {
+      opacity: 0.5;
+      background: rgba(239, 68, 68, 0.08) !important;
+      border-color: rgba(239, 68, 68, 0.3) !important;
+    }
+    .btn-restore {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 3px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-restore:hover {
+      background: rgba(16, 185, 129, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-avatar">NK</div>
+        <div class="brand-text">
+          <span class="brand-name">Naveena K</span>
+          <span class="brand-sub">Admin Portal</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="skills.html" class="nav-link">Skills</a></li>
+        <li><a href="projects.html" class="nav-link">Projects</a></li>
+        <li><a href="papers.html" class="nav-link">Technical Papers</a></li>
+        <li><a href="resume.html" class="nav-link">Resume</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li><a href="admin.html" class="nav-link admin-link active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Admin</a></li>
+        <li class="nav-cta"><a href="contact.html" class="btn-hire">Hire Me</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- 1. LOGIN SECTION -->
+      <section id="loginSection" class="admin-login-wrapper">
+        <div class="admin-card">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div class="brand-avatar" style="margin: 0 auto 12px; width: 48px; height: 48px; font-size: 1.15rem;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-main);">Portfolio Admin Login</h1>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;">
+              Sign in to manage portfolio content, photos, and messages
+            </p>
+          </div>
+
+          <!-- Error Message Banner -->
+          <div id="loginErrorMessage" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #FCA5A5; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.8rem; margin-bottom: 16px; font-weight: 500;">
+            Invalid email or password. Please try again.
+          </div>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="adminEmail" class="form-label">Email Address</label>
+              <input 
+                type="email" 
+                id="adminEmail" 
+                class="form-input" 
+                placeholder="Enter email address" 
+                autocomplete="username"
+                required 
+              />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label for="adminPassword" class="form-label" style="margin-bottom: 0;">Password</label>
+              </div>
+              <div style="position: relative;">
+                <input 
+                  type="password" 
+                  id="adminPassword" 
+                  class="form-input" 
+                  placeholder="Enter password" 
+                  autocomplete="current-password"
+                  required 
+                  style="padding-right: 40px;"
+                />
+                <button type="button" id="togglePasswordIconBtn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;" title="Toggle password visibility">
+                  <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                  <polyline points="10 17 15 12 10 7"></polyline>
+                  <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+                Sign In to Dashboard
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- 2. DASHBOARD SECTION (Shown after successful login) -->
+      <section id="dashboardSection" style="display: none;">
+        <!-- Admin Header Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; background: var(--bg-card); padding: 16px 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge badge-success">Admin Session Active</span>
+              <span style="font-size: 0.775rem; color: var(--text-muted);">naveenkrishnamurthy2006@gmail.com</span>
+            </div>
+            <h1 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-top: 4px;">
+              Portfolio Content Manager
+            </h1>
+          </div>
+          
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button id="viewPortfolioBtn" class="btn btn-secondary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              View Live Portfolio
+            </button>
+            <button type="button" id="saveContentBtnTop" class="btn btn-primary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              Save All Changes
+            </button>
+            <button id="logoutBtn" class="btn btn-outline btn-sm" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.4);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <!-- Admin Tabs Navigation -->
+        <div class="admin-tabs-nav" id="adminTabsNav">
+          <button type="button" class="admin-tab-btn active" data-tab="tab-overview" onclick="switchAdminTab('tab-overview')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Overview & Live DB
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-education" onclick="switchAdminTab('tab-education')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            Education <span class="admin-tab-badge" id="badgeEduCount">3</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-achievements" onclick="switchAdminTab('tab-achievements')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+            Achievements <span class="admin-tab-badge" id="badgeAchCount">3</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-projects" onclick="switchAdminTab('tab-projects')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            Projects <span class="admin-tab-badge" id="badgeProjCount">0</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-certs" onclick="switchAdminTab('tab-certs')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="12" cy="10" r="3"></circle><line x1="8" y1="16" x2="16" y2="16"></line></svg>
+            Certificates <span class="admin-tab-badge" id="badgeCertCount">0</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-papers" onclick="switchAdminTab('tab-papers')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            Papers <span class="admin-tab-badge" id="badgePaperCount">0</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-skills" onclick="switchAdminTab('tab-skills')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            Skills <span class="admin-tab-badge" id="badgeSkillCount">0</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-profile" onclick="switchAdminTab('tab-profile')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Profile & Bio
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-resume" onclick="switchAdminTab('tab-resume')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            Resume
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-queries" onclick="switchAdminTab('tab-queries')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Inquiries <span class="admin-tab-badge" id="badgeQueryCount">0</span>
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-database" onclick="switchAdminTab('tab-database')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            Database Explorer
+          </button>
+          <button type="button" class="admin-tab-btn" data-tab="tab-seo" onclick="switchAdminTab('tab-seo')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+            Site Indexing & SEO
+          </button>
+        </div>
+
+        <!-- TAB 1: OVERVIEW & DATABASE METRICS -->
+        <div id="tab-overview" class="admin-tab-content active">
+          <!-- Supabase Live Connection Banner -->
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 12px; height: 12px; border-radius: 50%; background: #10B981; box-shadow: 0 0 12px #10B981;"></div>
+              <div>
+                <div style="font-weight: 700; font-size: 0.95rem; color: #10B981; display: flex; align-items: center; gap: 8px;">
+                  <span>Connected to Supabase Database</span>
+                  <span style="font-size: 0.75rem; background: rgba(16, 185, 129, 0.2); padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #34D399;">Row: main</span>
+                  <span style="font-size: 0.75rem; background: rgba(15, 98, 254, 0.2); padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #93C5FD;">ID: zzjqkekiapteaixragev</span>
+                </div>
+                <p style="font-size: 0.8rem; color: #94A3B8; margin: 3px 0 0 0;">
+                  Live data retrieval active. All updates made in this admin panel persist directly into the database.
+                  <span id="overviewLastSyncTime" style="color: #60A5FA; margin-left: 6px;">Last Synced: Just now</span>
+                </p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="syncWithSupabaseNow()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                Sync Now
+              </button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="saveAllInputs()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
+                Save All Edits
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Database Summary Stats Cards -->
+          <div class="admin-stats-grid">
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-projects')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Projects</span>
+                <span style="color: #60A5FA;">🚀</span>
+              </div>
+              <div class="admin-stat-number" id="statProjectsCount">0</div>
+              <div style="font-size: 0.725rem; color: #60A5FA;">Live in DB</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-certs')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Certificates</span>
+                <span style="color: #34D399;">🏆</span>
+              </div>
+              <div class="admin-stat-number" id="statCertsCount">0</div>
+              <div style="font-size: 0.725rem; color: #34D399;">Live in DB</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-education')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Education</span>
+                <span style="color: #FBBF24;">🎓</span>
+              </div>
+              <div class="admin-stat-number" id="statEduCount">3</div>
+              <div style="font-size: 0.725rem; color: #FBBF24;">B.E. ECE, PUC, Class X</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-achievements')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Achievements</span>
+                <span style="color: #A78BFA;">🎖️</span>
+              </div>
+              <div class="admin-stat-number" id="statAchCount">3</div>
+              <div style="font-size: 0.725rem; color: #A78BFA;">Symposiums & Hackathons</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-papers')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Papers</span>
+                <span style="color: #F472B6;">📑</span>
+              </div>
+              <div class="admin-stat-number" id="statPapersCount">0</div>
+              <div style="font-size: 0.725rem; color: #F472B6;">Research & Reviews</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-skills')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Skills</span>
+                <span style="color: #38BDF8;">🛠️</span>
+              </div>
+              <div class="admin-stat-number" id="statSkillsCount">0</div>
+              <div style="font-size: 0.725rem; color: #38BDF8;">VLSI & Embedded EDA</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-queries')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Inquiries</span>
+                <span style="color: #FB923C;">📬</span>
+              </div>
+              <div class="admin-stat-number" id="statQueriesCount">0</div>
+              <div style="font-size: 0.725rem; color: #FB923C;">Visitor contact requests</div>
+            </div>
+
+            <div class="admin-stat-card" onclick="switchAdminTab('tab-database')" style="cursor: pointer;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="admin-stat-label">Database JSON</span>
+                <span style="color: #4ADE80;">🗄️</span>
+              </div>
+              <div class="admin-stat-number" style="font-size: 1.15rem; color: #4ADE80;">LIVE</div>
+              <div style="font-size: 0.725rem; color: #94A3B8;">Raw JSON Explorer</div>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Cards Grid -->
+          <div class="card" style="margin-bottom: 20px;">
+            <div class="card-header-accent"></div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              Quick Management Shortcuts
+            </h3>
+            <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 14px;">
+              Jump directly to any section to manage and edit your database content:
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-education')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                🎓 Manage Education Records
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-achievements')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                🎖️ Manage Achievements
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-projects')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                🚀 Manage Projects & Photos
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-certs')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                🏆 Manage Certifications & Drive URLs
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-profile')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                👤 Edit Hero, Bio & Goals
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-resume')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                📄 Upload / Replace Resume
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="switchAdminTab('tab-database')" style="justify-content: flex-start; gap: 8px; font-size: 0.85rem;">
+                🗄️ Inspect Database JSON
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: EDUCATION & ACADEMIC HISTORY (from Database) -->
+        <div id="tab-education" class="admin-tab-content">
+          <div class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge badge-primary">Database: data.education</span>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                  Education & Academic Pathway
+                </h2>
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 2px;">
+                  Academic milestones retrieved directly from your Supabase database. Edit degrees, institutions, CGPA, graduation years, or add new records.
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="toggleAddBox('addEducationBox')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add Academic Record
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for Education -->
+            <div id="addEducationBox" class="add-form-card" style="display: none; margin-bottom: 20px;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Educational Degree / School
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Degree / Certificate Name</label>
+                <input type="text" id="newEduDegree" class="form-input" placeholder="e.g. Master of Technology (M.Tech) in VLSI Design" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Institution / College Name</label>
+                <input type="text" id="newEduInstitution" class="form-input" placeholder="e.g. S J M Institute of Technology, Chitradurga" />
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label class="form-label">Year / Duration</label>
+                  <input type="text" id="newEduYear" class="form-input" placeholder="e.g. 2024 - 2028" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Score / CGPA / Percentage</label>
+                  <input type="text" id="newEduScore" class="form-input" placeholder="e.g. CGPA: 8.5 / 10.0" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <input type="text" id="newEduLocation" class="form-input" placeholder="e.g. Hiriyur, Karnataka" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Coursework & Academic Details</label>
+                <textarea id="newEduDetails" class="form-textarea" style="min-height: 60px;" placeholder="Core coursework, distinctions, specializations..."></textarea>
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addEducationBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewEducation()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Add Record
+                </button>
+              </div>
+            </div>
+
+            <!-- List of Education items from database -->
+            <div id="adminEducationList" style="display: flex; flex-direction: column; gap: 14px;">
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Loading academic records from database...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: ACHIEVEMENTS & HACKATHONS (from Database) -->
+        <div id="tab-achievements" class="admin-tab-content">
+          <div class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge badge-primary">Database: data.achievements</span>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                  Achievements, Competitions & Hackathons
+                </h2>
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 2px;">
+                  Symposiums, technical paper presentations, and hackathon recognitions stored in your Supabase database.
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="toggleAddBox('addAchievementBox')">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add Achievement
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for Achievements -->
+            <div id="addAchievementBox" class="add-form-card" style="display: none; margin-bottom: 20px;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Achievement / Award
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Event / Award Title</label>
+                <input type="text" id="newAchTitle" class="form-input" placeholder="e.g. VIDYUTSAVA-2K26 or EMERGE-2K26 Hackathon" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Description & Recognition Summary</label>
+                <textarea id="newAchDesc" class="form-textarea" style="min-height: 80px;" placeholder="Details about your rank, paper presentation, prototype, institution..."></textarea>
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addAchievementBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewAchievement()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Add Achievement
+                </button>
+              </div>
+            </div>
+
+            <!-- List of Achievements from database -->
+            <div id="adminAchievementsList" style="display: flex; flex-direction: column; gap: 14px;">
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Loading achievements from database...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile & Bio Tab Container -->
+        <div id="tab-profile" class="admin-tab-content">
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+
+          <!-- SECTION 1: HERO SECTION -->
+          <div id="sectionHero" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Home Page</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Hero Heading & Introduction
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('heroTitle')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Hero
+                </button>
+                <button type="button" class="btn-delete" onclick="deleteFieldContent('heroText', 'Hero description')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Clear Description
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Profile Avatar / Photo</span>
+                <span style="font-size: 0.72rem; color: #94A3B8;">Displayed on home hero card & navigation brand</span>
+              </label>
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.25); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                <div id="adminProfilePhotoPreview" style="width: 54px; height: 54px; border-radius: 12px; background: linear-gradient(135deg, #0F62FE 0%, #0043CE 100%); display: flex; align-items: center; justify-content: center; color: #FFF; font-weight: 800; font-size: 1.25rem; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); flex-shrink: 0;">
+                  NK
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                  <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="triggerFileInput('profilePhotoFileInput')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      Upload Photo
+                    </button>
+                    <button type="button" class="btn-delete" id="removeProfilePhotoBtn" onclick="removeProfilePhoto()" style="display: none; padding: 4px 8px; font-size: 0.72rem;">
+                      Remove Photo
+                    </button>
+                  </div>
+                  <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+                    <input type="url" id="profilePhotoUrlInput" class="form-input" style="font-size: 0.75rem; padding: 5px 8px; height: 32px;" placeholder="Or paste image URL (https://...)" onkeydown="if(event.key==='Enter'){event.preventDefault();applyProfilePhotoUrlFromInput();}" />
+                    <button type="button" class="btn btn-primary btn-sm" style="font-size: 0.72rem; padding: 4px 10px; white-space: nowrap; height: 32px;" onclick="applyProfilePhotoUrlFromInput()">
+                      Save URL
+                    </button>
+                  </div>
+                  <span style="font-size: 0.7rem; color: #94A3B8;">Auto-syncs to Supabase database (zzjqkekiapteaixragev) and displays on homepage & header</span>
+                </div>
+              </div>
+              <input type="file" id="profilePhotoFileInput" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(event)" />
+            </div>
+
+            <div class="form-group">
+              <label for="heroName" class="form-label">Full Name</label>
+              <input type="text" id="heroName" class="form-input" placeholder="e.g. Naveena K" />
+            </div>
+
+            <div class="form-group">
+              <label for="heroTitle" class="form-label">Hero Heading / Role</label>
+              <input type="text" id="heroTitle" class="form-input" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="heroText" class="form-label">Hero Description</label>
+              <textarea id="heroText" class="form-textarea" style="min-height: 70px;"></textarea>
+            </div>
+          </div>
+
+          <!-- SECTION 2: ABOUT SECTION -->
+          <div id="sectionAbout" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">About Page</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Education, Career Goal & Highlights
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('aboutEducation')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Section
+                </button>
+                <button type="button" class="btn-add" onclick="toggleAddBox('addAboutBox')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add Other Detail
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for About Details -->
+            <div id="addAboutBox" class="add-form-card" style="display: none;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Detail / Academic Highlight
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Detail Heading / Title</label>
+                <input type="text" id="newAboutTitle" class="form-input" placeholder="e.g. Academic Distinction / Lab Honors / Gate VLSI Prep" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Description / Details</label>
+                <textarea id="newAboutDesc" class="form-textarea" style="min-height: 60px;" placeholder="Details about this achievement or highlight..."></textarea>
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addAboutBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewAboutDetail()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Add Detail
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="aboutEducation" class="form-label">Education</label>
+              <input type="text" id="aboutEducation" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="aboutGoal" class="form-label">Career Goal</label>
+              <input type="text" id="aboutGoal" class="form-input" />
+            </div>
+
+            <!-- Container for Dynamically Added About Details -->
+            <div id="additionalAboutDetailsContainer"></div>
+          </div>
+
+          <!-- SECTION 3: CONTACT INFORMATION -->
+          <div id="sectionContact" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Contact & Socials</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Contact Information & Links
+                </h2>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('contactEmail')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Edit Contact
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label for="contactEmail" class="form-label">Contact Email</label>
+              <input type="email" id="contactEmail" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="contactPhone" class="form-label">Contact Phone / WhatsApp</label>
+              <input type="tel" id="contactPhone" class="form-input" placeholder="+91 8197308109" />
+            </div>
+
+            <div class="form-group">
+              <label for="contactLocation" class="form-label">Location / City</label>
+              <input type="text" id="contactLocation" class="form-input" placeholder="Hiriyur, Karnataka, India" />
+            </div>
+
+            <div class="form-group">
+              <label for="linkedin" class="form-label">LinkedIn Profile URL</label>
+              <input type="url" id="linkedin" class="form-input" />
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="github" class="form-label">GitHub Profile URL</label>
+              <input type="url" id="github" class="form-input" />
+            </div>
+          </div>
+
+          <!-- Save Button for Profile Tab -->
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn btn-primary" onclick="saveAllInputs()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
+              Save Profile Changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: SKILLS -->
+      <div id="tab-skills" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- SECTION 3: SKILLS SECTION -->
+          <div id="sectionSkills" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Skills Page</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Technical Skills & Competencies
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('skill1Title')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Section
+                </button>
+                <button type="button" class="btn-add" onclick="toggleAddBox('addSkillBox')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add New Skill
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for Skills -->
+            <div id="addSkillBox" class="add-form-card" style="display: none;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Technical Skill
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Skill Name</label>
+                <input type="text" id="newSkillTitle" class="form-input" placeholder="e.g. SystemVerilog / Cadence Virtuoso / Static Timing Analysis" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Category</label>
+                <input type="text" id="newSkillCategory" class="form-input" placeholder="e.g. Verification, EDA Tools, Hardware Architecture" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Description / Competency Details</label>
+                <textarea id="newSkillDesc" class="form-textarea" style="min-height: 60px;" placeholder="Hands-on experience in UVM testbenches, assertions, coverage..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tags (comma-separated)</label>
+                <input type="text" id="newSkillTags" class="form-input" placeholder="UVM, Assertions, SystemVerilog" />
+              </div>
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addSkillBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewSkill()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Add Skill
+                </button>
+              </div>
+            </div>
+
+            <!-- Database Skill Categories from Supabase (data.skills) -->
+            <div id="adminDatabaseSkillsSection" style="margin-bottom: 24px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(56, 189, 248, 0.1); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(56, 189, 248, 0.25);">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #38BDF8; display: flex; align-items: center; gap: 8px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                  Database Skill Domains (Retrieved from Supabase data.skills)
+                </div>
+                <span class="badge badge-success" id="badgeDbSkillsCount" style="font-size: 0.72rem;">0 In Database</span>
+              </div>
+              <div id="adminDatabaseSkillsList" style="display: flex; flex-direction: column; gap: 14px;">
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Loading database skill categories...</p>
+              </div>
+            </div>
+
+            </div>
+        </div>
+      </div>
+
+      <!-- TAB: PROJECTS -->
+      <div id="tab-projects" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- SECTION 4: PROJECTS SECTION -->
+          <div id="sectionProjects" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Projects Page</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Hardware & VLSI Projects
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('project1Title')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Section
+                </button>
+                <button type="button" class="btn-add" onclick="toggleAddBox('addProjectBox')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add New Project
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for Projects -->
+            <div id="addProjectBox" class="add-form-card" style="display: none;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Hardware / VLSI Project
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Project Title</label>
+                <input type="text" id="newProjectTitle" class="form-input" placeholder="e.g. RISC-V 32-Bit Processor Core in Verilog" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Project Description</label>
+                <textarea id="newProjectDesc" class="form-textarea" style="min-height: 60px;" placeholder="Designed a 5-stage pipelined processor with hazard detection, branch prediction, and verified using test vectors..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Technology Tags (comma-separated)</label>
+                <input type="text" id="newProjectTags" class="form-input" placeholder="Verilog, RISC-V, RTL, Vivado" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">GitHub Repository or Simulation URL</label>
+                <input type="url" id="newProjectLink" class="form-input" placeholder="https://github.com/naveena-k" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Key Highlights / Features</label>
+                <input type="text" id="newProjectHighlights" class="form-input" placeholder="Supports RV32I base integer instructions, synthesized at 100MHz clock" />
+              </div>
+
+              <!-- 4-Photo Uploader for New Project -->
+              <div class="admin-photo-uploader" style="margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+                  <div>
+                    <span style="font-size: 0.8rem; font-weight: 600; color: #93C5FD; display: flex; align-items: center; gap: 5px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      Add Up to 4 Project Photos (Hardware / RTL / Slides)
+                    </span>
+                    <span style="font-size: 0.72rem; color: #94A3B8;">Upload hardware snapshots, waveforms, or presentation slides</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onclick="triggerFileInput('newProjectPhotoInput')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      + Upload Photo
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;" onclick="promptAddNewItemPhotoUrl('project')" title="Add photo via image URL">
+                      🔗 Add URL
+                    </button>
+                  </div>
+                </div>
+                <input type="file" id="newProjectPhotoInput" accept="image/*" style="display: none;" onchange="handleNewItemPhotoSelected('project', event)" />
+                <div class="admin-photo-thumbs-list" id="newProjectPhotosThumbs"></div>
+              </div>
+
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addProjectBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewProject()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Add Project
+                </button>
+              </div>
+            </div>
+
+            <!-- Database Projects from Supabase (data.projects) -->
+            <div id="adminDatabaseProjectsSection" style="margin-bottom: 24px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(15, 98, 254, 0.1); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(69, 137, 255, 0.25);">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #60A5FA; display: flex; align-items: center; gap: 8px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                  Live Database Projects (Retrieved from Supabase data.projects)
+                </div>
+                <span class="badge badge-success" id="badgeDbProjectsCount" style="font-size: 0.72rem;">0 In Database</span>
+              </div>
+              <div id="adminDatabaseProjectsList" style="display: flex; flex-direction: column; gap: 14px;">
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Loading database hardware projects...</p>
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PAPERS -->
+      <div id="tab-papers" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- SECTION 5: TECHNICAL PAPERS SECTION -->
+          <div id="sectionPapers" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Papers Page</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Technical Papers & Research
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('dbPaperTitle')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Section
+                </button>
+                <button type="button" class="btn-add" onclick="toggleAddBox('addPaperBox')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add New Paper
+                </button>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for Papers -->
+            <div id="addPaperBox" class="add-form-card" style="display: none;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                Add / Update Technical Paper & Research Presentation
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Technical Paper Title</label>
+                <input type="text" id="newPaperTitle" class="form-input" placeholder="e.g. Design & Verification of Low-Power CMOS Inverter" />
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Event</label>
+                  <input type="text" id="newPaperEvent" class="form-input" placeholder="e.g. IEEE Technical Symposium" />
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Award won / Result</label>
+                  <input type="text" id="newPaperResult" class="form-input" placeholder="e.g. Best Paper Award" />
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Host Institution / University</label>
+                  <input type="text" id="newPaperInst" class="form-input" placeholder="e.g. Institution / University Name" />
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Conference / Event Date</label>
+                  <input type="text" id="newPaperDate" class="form-input" placeholder="e.g. 15/04/2026" />
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Google Drive Link to Full Paper / Certificate</label>
+                  <input type="url" id="newPaperLink" class="form-input" placeholder="https://drive.google.com/file/d/..." />
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Tagline / Motto</label>
+                  <input type="text" id="newPaperTagline" class="form-input" placeholder="e.g. Innovative Semiconductor Design for Next-Gen Computing." />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Abstract / System Description</label>
+                <textarea id="newPaperDesc" class="form-textarea" style="min-height: 80px;" placeholder="Detailed system description, architecture, sensors, and environmental impact..."></textarea>
+              </div>
+
+              <!-- 4-Photo Uploader for Technical Paper -->
+              <div class="admin-photo-uploader" style="margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+                  <div>
+                    <span style="font-size: 0.8rem; font-weight: 600; color: #93C5FD; display: flex; align-items: center; gap: 5px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      Add Up to 4 Paper Presentation / Certificate Photos
+                    </span>
+                    <span style="font-size: 0.72rem; color: #94A3B8;">Upload presentation slides, certificates, or symposium photos</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onclick="triggerFileInput('newPaperPhotoInput')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      + Upload Photo
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;" onclick="promptAddNewItemPhotoUrl('paper')" title="Add photo via image URL">
+                      🔗 Add URL
+                    </button>
+                  </div>
+                </div>
+                <input type="file" id="newPaperPhotoInput" accept="image/*" style="display: none;" onchange="handleNewItemPhotoSelected('paper', event)" />
+                <div class="admin-photo-thumbs-list" id="newPaperPhotosThumbs"></div>
+              </div>
+
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addPaperBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewPaper()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Publish Paper to DB
+                </button>
+              </div>
+            </div>
+
+            <!-- Database Technical Paper from Supabase (data.technicalPaper) -->
+            <div id="adminDatabasePaperSection" style="margin-bottom: 24px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(244, 114, 182, 0.1); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(244, 114, 182, 0.25);">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #F472B6; display: flex; align-items: center; gap: 8px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                  Published Research Paper (Retrieved from Supabase data.technicalPaper)
+                </div>
+                <span class="badge badge-success" id="badgeDbPapersCount" style="font-size: 0.72rem;">0 In Database</span>
+              </div>
+              <div id="adminDatabasePaperContainer" class="card" style="border: 1px solid rgba(244, 114, 182, 0.3); background: var(--bg-card); padding: 18px; margin-bottom: 0;">
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Loading technical paper from database...</p>
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CERTIFICATES -->
+      <div id="tab-certs" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- SECTION 6: CERTIFICATES SECTION -->
+          <div id="sectionCertificates" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Certificates Page</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                  Professional Certificates & Credentials
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="focusField('cert1Title')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Section
+                </button>
+                <button type="button" class="btn-add" onclick="toggleAddBox('addCertBox')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add New Certificate
+                </button>
+                <a href="certificates.html" target="_blank" class="btn btn-outline btn-sm" style="font-size: 0.775rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  View Public Page
+                </a>
+              </div>
+            </div>
+
+            <!-- Instant Add Box for Certificates -->
+            <div id="addCertBox" class="add-form-card" style="display: none;">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #60A5FA; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Professional Certificate / Credential
+              </h3>
+              <div class="form-group">
+                <label class="form-label">Certificate Title / Name</label>
+                <input type="text" id="newCertTitle" class="form-input" placeholder="e.g. CMOS VLSI Design & Verification" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Issuing Organization / Institution</label>
+                <input type="text" id="newCertIssuer" class="form-input" placeholder="e.g. NPTEL / IEEE / VTU Consortium" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Issue Date / Credential ID</label>
+                <input type="text" id="newCertDate" class="form-input" placeholder="e.g. Nov 2025 • ID: NPTEL25EE88VLSI" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Credential Verification URL (View Details Link)</label>
+                <input type="url" id="newCertUrl" class="form-input" placeholder="https://drive.google.com/file/d/... or verification link" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Certificate Description / Syllabus</label>
+                <textarea id="newCertDesc" class="form-textarea" style="min-height: 60px;" placeholder="Details of competencies verified, coursework, or lab demonstrations..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tags (comma-separated)</label>
+                <input type="text" id="newCertTags" class="form-input" placeholder="VLSI, CMOS, NPTEL, Certified" />
+              </div>
+<!-- 4-Photo Uploader for New Certificate -->
+              <div class="admin-photo-uploader" style="margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+                  <div>
+                    <span style="font-size: 0.8rem; font-weight: 600; color: #93C5FD; display: flex; align-items: center; gap: 5px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      Add Up to 4 Certificate / Presentation Photos
+                    </span>
+                    <span style="font-size: 0.72rem; color: #94A3B8;">Upload scanned certificates, award photos, or presentation slides</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; align-items: center;">
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onclick="triggerFileInput('newCertPhotoInput')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                      + Upload Photo
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 8px;" onclick="promptAddNewItemPhotoUrl('cert')" title="Add photo via image URL">
+                      🔗 Add URL
+                    </button>
+                  </div>
+                </div>
+                <input type="file" id="newCertPhotoInput" accept="image/*" style="display: none;" onchange="handleNewItemPhotoSelected('cert', event)" />
+                <div class="admin-photo-thumbs-list" id="newCertPhotosThumbs"></div>
+              </div>
+
+              
+              <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAddBox('addCertBox')">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="submitNewCertificate()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Add Certificate
+                </button>
+              </div>
+            </div>
+
+            <!-- Database Certifications from Supabase (data.certifications) -->
+            <div id="adminDatabaseCertsSection" style="margin-bottom: 24px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(16, 185, 129, 0.1); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(16, 185, 129, 0.25);">
+                <div style="font-weight: 700; font-size: 0.9rem; color: #34D399; display: flex; align-items: center; gap: 8px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                  Verified Credentials from Database (Retrieved from Supabase data.certifications)
+                </div>
+                <span class="badge badge-success" id="badgeDbCertsCount" style="font-size: 0.72rem;">0 In Database</span>
+              </div>
+              <div id="adminDatabaseCertsList" style="display: flex; flex-direction: column; gap: 14px;">
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Loading verified certifications from database...</p>
+              </div>
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: RESUME -->
+      <div id="tab-resume" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- RESUME SECTION -->
+          <div id="sectionResume" class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span class="badge badge-primary">Resume Page & Documents</span>
+                <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  Resume & Curriculum Vitae
+                </h2>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <button type="button" class="btn btn-secondary btn-sm" id="editResumeBtn" onclick="triggerResumeUpload()" title="Click to upload/replace your Resume file">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  Edit & Upload Resume
+                </button>
+                <a href="resume.html" target="_blank" class="btn btn-outline btn-sm" style="font-size: 0.775rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  View Public Resume
+                </a>
+              </div>
+            </div>
+
+            <!-- Hidden File Input for Resume Upload -->
+            <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleResumeFileSelected(event)" />
+
+            <!-- Active Resume Status Display Card -->
+            <div style="background: rgba(15, 98, 254, 0.06); border: 1px solid rgba(15, 98, 254, 0.25); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: 8px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); display: flex; align-items: center; justify-content: center; color: #EF4444; flex-shrink: 0;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span id="currentResumeFileName" style="font-weight: 700; color: #FFFFFF; font-size: 0.95rem;">Naveena_K_Resume.pdf</span>
+                    <span id="resumeSyncBadge" style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.2); color: #34D399; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
+                      Synced with Supabase Cloud
+                    </span>
+                  </div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; display: flex; gap: 12px; flex-wrap: wrap;">
+                    <span>Last modified: <strong id="currentResumeLastUpdated" style="color: #93C5FD;">Oct 2026</strong></span>
+                    <span>Status: <strong id="currentResumeStatus" style="color: #34D399;">Active for Public Download (211 KB)</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="triggerResumeUpload()" style="display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  Edit / Replace Resume
+                </button>
+                <a id="adminPreviewResumeLink" href="Naveena_K_Resume.pdf" download="Naveena_K_Resume.pdf" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download Current
+                </a>
+              </div>
+            </div>
+
+            <!-- Upload Drag-and-Drop Area with Edit Icon -->
+            <div id="resumeDropzone" onclick="triggerResumeUpload()" ondragover="handleResumeDragOver(event)" ondragleave="handleResumeDragLeave(event)" ondrop="handleResumeDrop(event)"
+                 style="border: 2px dashed rgba(69, 137, 255, 0.4); border-radius: var(--radius-md); padding: 24px 20px; text-align: center; cursor: pointer; background: rgba(11, 25, 44, 0.5); transition: all 0.2s ease; margin-bottom: 20px;">
+              <div style="width: 44px; height: 44px; margin: 0 auto 10px; border-radius: 50%; background: rgba(15, 98, 254, 0.12); display: flex; align-items: center; justify-content: center; color: #60A5FA;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </div>
+              <div style="font-weight: 600; color: #FFFFFF; font-size: 0.95rem; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>Click here or drag & drop your updated Resume (PDF or DOC)</span>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">
+                Supports PDF and Word files. Uploading automatically updates public download buttons & syncs to Supabase.
+              </div>
+              <div id="resumeUploadProgress" style="display: none; margin-top: 10px; font-size: 0.825rem; color: #34D399; font-weight: 600;">
+                Uploading & synchronizing with Supabase database...
+              </div>
+            </div>
+
+            <!-- Resume Content Details (Objective & Coursework) -->
+            <div class="form-group">
+              <label for="resumeObjective" class="form-label">Resume Career Objective</label>
+              <textarea id="resumeObjective" class="form-textarea" rows="3" placeholder="Seeking internships or entry-level opportunities in VLSI design, verification, FPGA development..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label for="resumeEducation" class="form-label">Resume Relevant Coursework & Degrees</label>
+              <textarea id="resumeEducation" class="form-textarea" rows="3" placeholder="CMOS VLSI Design, Digital Electronics & Logic Design, Microcontrollers & Embedded Systems, Signals & Systems, Analog Electronics..."></textarea>
+            </div>
+
+            <!-- Save Resume Button -->
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" class="btn btn-primary" onclick="saveAllInputs()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
+                Save Resume Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: VISITOR INQUIRIES -->
+      <div id="tab-queries" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- SECTION: VISITOR QUERIES INBOX -->
+          <div class="card" id="queriesSection">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge badge-primary">Database: data.messages</span>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  Visitor Queries Inbox
+                </h2>
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 2px;">
+                  Messages & appointment bookings received from visitors through the Contact form.
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="renderQueries()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Refresh Inbox
+                </button>
+                <button type="button" id="clearQueriesBtn" class="btn btn-outline btn-sm" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.4);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  Clear All Queries
+                </button>
+              </div>
+            </div>
+
+            <!-- List container for queries -->
+            <div id="queriesList">
+              <p style="color: var(--text-muted); font-size: 0.85rem;">No queries available yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: DATABASE RAW JSON EXPLORER -->
+      <div id="tab-database" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge badge-success">Supabase Live Connection</span>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                  Live Supabase Database Explorer
+                </h2>
+                <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 2px;">
+                  Inspect and directly edit the live JSON data row stored in Supabase table <code>portfolio_data</code> (Row ID: <code>main</code>).
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="syncWithSupabaseNow()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  Refresh from DB
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="copyDatabaseJsonToClipboard()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  Copy JSON
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="downloadDatabaseBackupJson()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Download Backup (.json)
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" id="toggleJsonEditBtn" onclick="toggleDatabaseJsonEditMode()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Edit Raw JSON
+                </button>
+              </div>
+            </div>
+
+            <!-- Search filter in JSON -->
+            <div id="jsonSearchFilterBox" class="form-group" style="margin-bottom: 12px;">
+              <input type="text" id="jsonSearchInput" class="form-input" placeholder="Search keys or values in database JSON (e.g. education, projects, certifications, hero)..." oninput="filterDatabaseJson(this.value)" />
+            </div>
+
+            <!-- Read-only Code viewer -->
+            <pre class="admin-json-viewer" id="databaseJsonViewer">Fetching live database row from Supabase...</pre>
+
+            <!-- Raw JSON Editor Mode (Hidden by default) -->
+            <div id="databaseJsonEditContainer" style="display: none; margin-top: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 0.8rem; color: #F59E0B; font-weight: 600;">⚠️ Direct JSON Editor — Ensure valid JSON format before saving</span>
+                <span id="jsonEditorStatus" style="font-size: 0.775rem; color: #94A3B8;"></span>
+              </div>
+              <textarea id="databaseJsonEditor" class="admin-json-viewer" style="width: 100%; min-height: 400px; resize: vertical; outline: none; border-color: rgba(245, 158, 11, 0.4);"></textarea>
+              <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelDatabaseJsonEdit()">Cancel Edit</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="saveEditedDatabaseJson()">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save & Push to Supabase Database
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: SITE INDEXING & SEO -->
+      <div id="tab-seo" class="admin-tab-content">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <!-- Header Banner -->
+          <div class="card">
+            <div class="card-header-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
+              <div>
+                <span class="badge badge-success">Google & Search Engine Ready</span>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                  Site Indexing & Google Search Console
+                </h2>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; max-width: 680px;">
+                  Paste your live website address here to index your portfolio on Google. We generate your XML sitemap, robots.txt, canonical URLs, and insert your Google Search Console verification tag.
+                </p>
+              </div>
+
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <a href="https://search.google.com/search-console/welcome" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  Open Google Search Console
+                </a>
+              </div>
+            </div>
+
+            <!-- Current Status Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px;">
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px 14px;">
+                <div style="font-size: 0.725rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Live Site URL</div>
+                <div id="statusSiteUrlDisplay" style="font-size: 0.825rem; color: #60A5FA; font-weight: 600; margin-top: 3px; word-break: break-all;">Not Configured</div>
+              </div>
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px 14px;">
+                <div style="font-size: 0.725rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Google Verification Tag</div>
+                <div id="statusGoogleTagDisplay" style="font-size: 0.825rem; color: #10B981; font-weight: 600; margin-top: 3px;">Active</div>
+              </div>
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px 14px;">
+                <div style="font-size: 0.725rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">XML Sitemap</div>
+                <div id="statusSitemapDisplay" style="font-size: 0.825rem; color: #A78BFA; font-weight: 600; margin-top: 3px;">8 Pages Indexed</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4-Step Interactive Guide: How to Index Your Site -->
+          <div class="card">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span style="color: #60A5FA;">⚡</span> 4-Step Quick Guide: How to Index This Site on Google
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+              <div class="seo-step-card">
+                <div class="seo-step-badge">1</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.9rem; color: #FFFFFF;">Copy Live Site URL</div>
+                  <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; line-height: 1.45;">
+                    Use the auto-detected URL below or paste your custom domain if you have mapped one.
+                  </p>
+                  <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 8px; font-size: 0.75rem;" onclick="copySiteUrlToClipboard()">
+                    📋 Copy Site URL
+                  </button>
+                </div>
+              </div>
+
+              <div class="seo-step-card">
+                <div class="seo-step-badge">2</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.9rem; color: #FFFFFF;">Add to Search Console</div>
+                  <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; line-height: 1.45;">
+                    Open Search Console, select <strong>URL prefix</strong>, paste your URL, and click <strong>Continue</strong>.
+                  </p>
+                  <a href="https://search.google.com/search-console/welcome" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="margin-top: 8px; font-size: 0.75rem;">
+                    ↗ Open Console
+                  </a>
+                </div>
+              </div>
+
+              <div class="seo-step-card">
+                <div class="seo-step-badge">3</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.9rem; color: #FFFFFF;">Paste Verification Tag</div>
+                  <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; line-height: 1.45;">
+                    Under "Other methods", choose <strong>HTML tag</strong>. Copy the tag, paste it into the field below, and click <strong>Save</strong>.
+                  </p>
+                  <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 8px; font-size: 0.75rem;" onclick="focusSeoField('seoGoogleVerification')">
+                    ✍️ Jump to Input
+                  </button>
+                </div>
+              </div>
+
+              <div class="seo-step-card">
+                <div class="seo-step-badge">4</div>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.9rem; color: #FFFFFF;">Submit Sitemap</div>
+                  <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; line-height: 1.45;">
+                    In Search Console -> <strong>Sitemaps</strong>, enter <code>sitemap.xml</code> and click <strong>Submit</strong> to crawl all 8 pages.
+                  </p>
+                  <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 8px; font-size: 0.75rem;" onclick="copySitemapUrlToClipboard()">
+                    🗺️ Copy Sitemap URL
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Configuration Form -->
+          <div class="card">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span>🌐</span> Site Indexing & Metadata Settings
+            </h3>
+
+            <form id="seoSettingsForm" onsubmit="event.preventDefault(); saveSeoSettings();">
+              <!-- Field 1: Live Website URL -->
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+                  <label for="seoSiteUrl" class="form-label" style="margin-bottom: 0;">
+                    Live Website URL <span style="color: #EF4444;">*</span>
+                  </label>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.75rem;" onclick="autoDetectSiteUrl()">
+                      ⚡ Auto-detect Current URL
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.75rem;" onclick="pasteSiteUrlFromClipboard()">
+                      📋 Paste
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.75rem;" onclick="copySiteUrlToClipboard()">
+                      🔗 Copy
+                    </button>
+                  </div>
+                </div>
+                <input 
+                  type="url" 
+                  id="seoSiteUrl" 
+                  class="form-input" 
+                  placeholder="https://ais-pre-dvchbkbkhlw33asnf2e35d-963613134071.asia-southeast1.run.app"
+                  required
+                  oninput="updateSerpPreview()"
+                />
+                <span class="form-hint">
+                  The primary public URL where your portfolio is hosted or custom domain. Used for canonical tags, OpenGraph sharing cards, and search engine sitemaps.
+                </span>
+              </div>
+
+              <!-- Field 2: Google Search Console Verification Tag -->
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <label for="seoGoogleVerification" class="form-label" style="margin-bottom: 0;">
+                    Google Site Verification Tag or Token
+                  </label>
+                  <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.75rem;" onclick="pasteGoogleVerificationFromClipboard()">
+                    📋 Paste Tag
+                  </button>
+                </div>
+                <input 
+                  type="text" 
+                  id="seoGoogleVerification" 
+                  class="form-input" 
+                  placeholder='e.g. <meta name="google-site-verification" content="abcdef123456" /> or just "abcdef123456"'
+                  oninput="sanitizeGoogleVerificationTag()"
+                />
+                <span class="form-hint">
+                  Paste the full HTML tag or code provided by Google Search Console. We will automatically sanitize and embed it into the <code>&lt;head&gt;</code> of all portfolio pages.
+                </span>
+              </div>
+
+              <!-- Field 3: Bing Webmaster Verification -->
+              <div class="form-group">
+                <label for="seoBingVerification" class="form-label">
+                  Bing Webmaster Verification Code (Optional)
+                </label>
+                <input 
+                  type="text" 
+                  id="seoBingVerification" 
+                  class="form-input" 
+                  placeholder='e.g. 748C6B7B4B27964E7A2E5B10D707BEA3'
+                />
+                <span class="form-hint">
+                  Optional code for Bing Webmaster Tools verification (<code>&lt;meta name="msvalidate.01" content="..." /&gt;</code>).
+                </span>
+              </div>
+
+              <!-- Field 4: Meta Title -->
+              <div class="form-group">
+                <label for="seoPageTitle" class="form-label">
+                  SEO Search Title
+                </label>
+                <input 
+                  type="text" 
+                  id="seoPageTitle" 
+                  class="form-input" 
+                  value="Naveena K | Aspiring VLSI Engineer - ECE Portfolio"
+                  oninput="updateSerpPreview()"
+                />
+                <span class="form-hint">Recommended length: 30–60 characters. Appears as the clickable blue headline in Google search results.</span>
+              </div>
+
+              <!-- Field 5: Meta Description -->
+              <div class="form-group">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <label for="seoPageDescription" class="form-label" style="margin-bottom: 0;">
+                    SEO Meta Description
+                  </label>
+                  <span id="metaDescCount" style="font-size: 0.75rem; color: var(--text-muted);">0 / 160 chars</span>
+                </div>
+                <textarea 
+                  id="seoPageDescription" 
+                  class="form-textarea" 
+                  rows="3"
+                  oninput="updateSerpPreview()"
+                >Portfolio of Naveena K, an Electronics and Communication Engineering (ECE) student from Chitradurga, Karnataka specializing in VLSI design, Verilog HDL, RTL verification, CMOS circuits, and FPGA prototyping.</textarea>
+                <span class="form-hint">Recommended length: 120–160 characters. Explains what your site is about directly in Google snippets.</span>
+              </div>
+
+              <!-- Field 6: Keywords -->
+              <div class="form-group">
+                <label for="seoKeywords" class="form-label">
+                  Target Search Keywords
+                </label>
+                <input 
+                  type="text" 
+                  id="seoKeywords" 
+                  class="form-input" 
+                  value="Naveena K, VLSI Engineer, ECE student, Chitradurga, SJMIT, Verilog HDL, RTL Design, FPGA simulation, CMOS, semiconductor"
+                />
+                <span class="form-hint">Comma-separated keywords highlighting your core engineering skills and university background.</span>
+              </div>
+
+              <!-- Save Buttons -->
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary" id="saveSeoBtn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Save Indexing & SEO Settings
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetSeoToDefaults()">
+                  Reset to Defaults
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Live Google Search SERP Preview -->
+          <div class="card">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>🔍</span> Live Google Search Snippet Preview
+            </h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
+              This is how your portfolio will look to recruiters and visitors searching for "Naveena K VLSI Engineer" on Google:
+            </p>
+
+            <div class="google-serp-card">
+              <div class="google-serp-site">
+                <span class="google-serp-favicon">NK</span>
+                <div>
+                  <span style="font-weight: 500;">Naveena K Portfolio</span>
+                  <div class="google-serp-url" id="serpPreviewUrl">https://ais-pre-dvchbkbkhlw33asnf2e35d-963613134071.asia-southeast1.run.app</div>
+                </div>
+              </div>
+              <a href="#" class="google-serp-title" id="serpPreviewTitle" onclick="event.preventDefault()">
+                Naveena K | Aspiring VLSI Engineer - ECE Portfolio
+              </a>
+              <div class="google-serp-desc" id="serpPreviewDesc">
+                Portfolio of Naveena K, an Electronics and Communication Engineering (ECE) student from Chitradurga, Karnataka specializing in VLSI design, Verilog HDL, RTL verification, CMOS circuits, and FPGA prototyping.
+              </div>
+            </div>
+          </div>
+
+          <!-- Sitemaps, Robots & Instant Action Links -->
+          <div class="card">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+              <span>🗺️</span> Sitemap & Search Engine Submission Center
+            </h3>
+
+            <!-- Quick Links to Search Engine Inspection Tools -->
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="openGoogleSearchConsole()">
+                🚀 Open Google Search Console
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="testGoogleRichResults()">
+                🔎 Test Rich Results
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="testGooglePageSpeed()">
+                ⚡ Test PageSpeed & Mobile
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="openBingWebmaster()">
+                🌐 Bing Webmaster Tools
+              </button>
+            </div>
+
+            <!-- Sitemap and robots cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;">
+              <!-- Sitemap Card -->
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-weight: 700; font-size: 0.875rem; color: #FFFFFF;">sitemap.xml</span>
+                  <span class="badge badge-success">8 Pages</span>
+                </div>
+                <p style="font-size: 0.775rem; color: var(--text-muted); margin-bottom: 10px;">
+                  URL to submit to Google Search Console -> Sitemaps:
+                </p>
+                <div style="background: #0B192C; padding: 8px 10px; border-radius: 4px; font-family: monospace; font-size: 0.775rem; color: #93C5FD; word-break: break-all; margin-bottom: 10px;" id="sitemapUrlDisplay">
+                  https://ais-pre-dvchbkbkhlw33asnf2e35d-963613134071.asia-southeast1.run.app/sitemap.xml
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="copySitemapUrlToClipboard()">
+                    📋 Copy Sitemap URL
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="downloadSitemapXml()">
+                    📥 Download sitemap.xml
+                  </button>
+                </div>
+              </div>
+
+              <!-- robots.txt Card -->
+              <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-weight: 700; font-size: 0.875rem; color: #FFFFFF;">robots.txt</span>
+                  <span class="badge badge-success">Googlebot Allowed</span>
+                </div>
+                <p style="font-size: 0.775rem; color: var(--text-muted); margin-bottom: 10px;">
+                  Directs search engine crawlers to your sitemap:
+                </p>
+                <div style="background: #0B192C; padding: 8px 10px; border-radius: 4px; font-family: monospace; font-size: 0.775rem; color: #93C5FD; word-break: break-all; margin-bottom: 10px;" id="robotsUrlDisplay">
+                  https://ais-pre-dvchbkbkhlw33asnf2e35d-963613134071.asia-southeast1.run.app/robots.txt
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="copyRobotsUrlToClipboard()">
+                    📋 Copy robots.txt URL
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="downloadRobotsTxt()">
+                    📥 Download robots.txt
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page Indexing Table -->
+            <div style="margin-top: 18px;">
+              <h4 style="font-size: 0.85rem; font-weight: 700; color: #E2E8F0; margin-bottom: 8px;">
+                Indexed Pages in Sitemap
+              </h4>
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
+                      <th style="padding: 6px 10px;">Page Name</th>
+                      <th style="padding: 6px 10px;">Path</th>
+                      <th style="padding: 6px 10px;">Priority</th>
+                      <th style="padding: 6px 10px;">Frequency</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Home / Overview</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>/</code> (or <code>index.html</code>)</td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">1.0 (Highest)</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Weekly</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Projects</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>projects.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.9</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Weekly</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Technical Papers</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>papers.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.9</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Weekly</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Resume</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>resume.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.9</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Weekly</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">About</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>about.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.8</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Monthly</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Skills</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>skills.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.8</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Monthly</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Certificates</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>certificates.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.8</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Monthly</td>
+                    </tr>
+                    <tr style="color: #F1F5F9;">
+                      <td style="padding: 6px 10px; font-weight: 600;">Contact</td>
+                      <td style="padding: 6px 10px; color: #60A5FA;"><code>contact.html</code></td>
+                      <td style="padding: 6px 10px;"><span class="badge badge-success">0.7</span></td>
+                      <td style="padding: 6px 10px; color: var(--text-muted);">Monthly</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="adminToast" class="toast">Notification</div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-text">
+        © 2026 Naveena K. All rights reserved.
+      </div>
+      <div class="footer-links">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="about.html" class="footer-link">About</a>
+        <a href="skills.html" class="footer-link">Skills</a>
+        <a href="projects.html" class="footer-link">Projects</a>
+        <a href="papers.html" class="footer-link">Papers</a>
+        <a href="resume.html" class="footer-link">Resume</a>
+        <a href="contact.html" class="footer-link">Contact</a>
+        <a href="admin.html" class="footer-link" style="color: var(--primary); font-weight: 600;">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="supabase.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

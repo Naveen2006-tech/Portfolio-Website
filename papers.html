@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical Papers | Naveena K - VLSI & Semiconductor Research</title>
+  <meta name="description" content="Technical papers and review publications by Naveena K on Low-Power VLSI, CMOS Inverter Circuits, FPGA FSM Design, and Semiconductor Device Scaling." />
+  <meta property="og:title" content="Technical Papers | Naveena K" />
+  <meta property="og:description" content="Read research papers and technical reports authored by Naveena K." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230F62FE'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='46' font-family='sans-serif' font-weight='bold' fill='white'>NK</text></svg>" />
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-avatar">NK</div>
+        <div class="brand-text">
+          <span class="brand-name">Naveena K</span>
+          <span class="brand-sub">VLSI Engineer</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="skills.html" class="nav-link">Skills</a></li>
+        <li><a href="projects.html" class="nav-link">Projects</a></li>
+        <li><a href="papers.html" class="nav-link active">Technical Papers</a></li>
+        <li><a href="certificates.html" class="nav-link">Certificates</a></li>
+        <li><a href="resume.html" class="nav-link">Resume</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li><a href="admin.html" class="nav-link admin-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Admin</a></li>
+        <li class="nav-cta"><a href="contact.html" class="btn-hire">Hire Me</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Academic & Research Writing</span>
+        <h1 class="section-title">Technical Papers & Reports</h1>
+        <p class="section-description">
+          In-depth technical literature reviews and analysis focusing on low-power architectures, sub-micron transistor scaling, and high-performance digital logic.
+        </p>
+      </div>
+
+      <!-- Papers Grid -->
+      <div class="grid-2" id="papersGrid"></div>
+    </div>
+  </main>
+
+  <!-- Interactive Modal Paper Reader -->
+  <div class="modal-overlay" id="paperModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeModalBtn" aria-label="Close modal">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-text">
+        © 2026 Naveena K. All rights reserved.
+      </div>
+      <div class="footer-links">
+        <a href="about.html" class="footer-link">About</a>
+        <a href="skills.html" class="footer-link">Skills</a>
+        <a href="projects.html" class="footer-link">Projects</a>
+        <a href="papers.html" class="footer-link">Papers</a>
+        <a href="certificates.html" class="footer-link">Certificates</a>
+        <a href="resume.html" class="footer-link">Resume</a>
+        <a href="contact.html" class="footer-link">Contact</a>
+        <a href="admin.html" class="footer-link" style="color: var(--text-subtle);">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Universal Presentation Photos Lightbox Modal -->
+  <div id="presentationLightbox" class="presentation-lightbox-backdrop" onclick="if(event.target===this) closePresentationLightbox()">
+    <div class="presentation-lightbox-card">
+      <div class="presentation-lightbox-header">
+        <h3 id="lightboxCaption" style="font-size: 0.95rem; font-weight: 700; color: #FFFFFF; margin: 0;">Presentation Slide Preview</h3>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="closePresentationLightbox()" style="padding: 4px 10px; font-size: 0.8rem;">
+          ✕ Close
+        </button>
+      </div>
+      <div class="presentation-lightbox-body">
+        <img id="lightboxImage" src="" alt="Presentation Photo" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Admin Shortcut -->
+  <a href="admin.html" class="admin-float-btn" title="Open Admin Portal">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+    Admin Portal
+  </a>
+
+  <script src="supabase.js"></script>
+  <script src="content.js"></script>
+  <script>
+    const modal = document.getElementById("paperModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener("click", () => modal && modal.classList.remove("open"));
+    }
+
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("open");
+      });
+    }
+
+    window.openPresentationLightbox = function(src, caption) {
+      const box = document.getElementById("presentationLightbox");
+      const img = document.getElementById("lightboxImage");
+      const cap = document.getElementById("lightboxCaption");
+      if (box && img) {
+        img.src = src;
+        if (cap) cap.textContent = caption || "Presentation Photo Preview";
+        box.classList.add("open");
+      }
+    };
+
+    window.closePresentationLightbox = function() {
+      const box = document.getElementById("presentationLightbox");
+      if (box) box.classList.remove("open");
+    };
+  </script>
+</body>
+</html>
