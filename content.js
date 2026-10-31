@@ -1638,6 +1638,135 @@ function escapeHTML(str) {
 }
 
 /**
+ * Modern Floating Tabs Navigation Dock
+ * Renders a frosted-glass floating navigation pill with active tracking and responsive collapse
+ */
+function setupFloatingTabs() {
+  if (window.location.pathname.includes("admin") || document.getElementById("dashboardSection")) {
+    return;
+  }
+
+  // Prevent duplicate mounts
+  if (document.getElementById("floatingTabsDock")) return;
+
+  const currentPath = window.location.pathname.replace(/^\/+/, "").toLowerCase() || "index.html";
+
+  const tabsConfig = [
+    {
+      id: "tab-home",
+      label: "Home",
+      url: "index.html",
+      match: ["", "index.html", "index"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`
+    },
+    {
+      id: "tab-about",
+      label: "About",
+      url: "about.html",
+      match: ["about.html", "about"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
+    },
+    {
+      id: "tab-skills",
+      label: "Skills",
+      url: "skills.html",
+      match: ["skills.html", "skills"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`
+    },
+    {
+      id: "tab-projects",
+      label: "Projects",
+      url: "projects.html",
+      match: ["projects.html", "projects"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
+    },
+    {
+      id: "tab-papers",
+      label: "Papers",
+      url: "papers.html",
+      match: ["papers.html", "papers"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`
+    },
+    {
+      id: "tab-certs",
+      label: "Certificates",
+      url: "certificates.html",
+      match: ["certificates.html", "certificates"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`
+    },
+    {
+      id: "tab-resume",
+      label: "Resume",
+      url: "resume.html",
+      match: ["resume.html", "resume"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`
+    },
+    {
+      id: "tab-contact",
+      label: "Contact",
+      url: "contact.html",
+      match: ["contact.html", "contact"],
+      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`
+    }
+  ];
+
+  const container = document.createElement("div");
+  container.id = "floatingTabsDock";
+  container.className = "floating-dock-container";
+  container.setAttribute("role", "navigation");
+  container.setAttribute("aria-label", "Floating Navigation Dock");
+
+  const nav = document.createElement("nav");
+  nav.className = "floating-dock-nav";
+
+  tabsConfig.forEach(tab => {
+    const isActive = tab.match.some(m => 
+      currentPath.endsWith(m) || 
+      currentPath === m || 
+      (m === "" && (currentPath === "index.html" || currentPath === "" || currentPath === "/"))
+    );
+
+    const a = document.createElement("a");
+    a.href = tab.url;
+    a.className = `floating-dock-tab ${isActive ? "active" : ""}`;
+    a.title = tab.label;
+    if (isActive) a.setAttribute("aria-current", "page");
+
+    a.innerHTML = `
+      ${tab.icon}
+      <span class="tab-label">${escapeHTML(tab.label)}</span>
+      ${isActive ? `<span class="floating-dock-dot"></span>` : ""}
+    `;
+
+    nav.appendChild(a);
+  });
+
+  container.appendChild(nav);
+  document.body.appendChild(container);
+
+  // Modern smart scroll behavior: hide on fast scroll down, reveal on scroll up
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        // Don't hide if near the top
+        if (currentScrollY > 150 && currentScrollY > lastScrollY + 12) {
+          container.classList.add("dock-hidden");
+        } else if (currentScrollY < lastScrollY - 6 || currentScrollY <= 90) {
+          container.classList.remove("dock-hidden");
+        }
+        lastScrollY = currentScrollY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+}
+
+/**
  * Robust Initialization (DOM ready or already loaded)
  */
 function initPortfolioApp() {
@@ -1645,6 +1774,7 @@ function initPortfolioApp() {
   setupNavigation();
   setupContactForm();
   setupSmoothScrolling();
+  setupFloatingTabs();
 }
 
 if (document.readyState === "loading") {

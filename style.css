@@ -1934,3 +1934,159 @@ a:hover {
     justify-content: center;
   }
 }
+
+/* ========================================================
+   MODERN FLOATING TABS NAVIGATION DOCK
+   ======================================================== */
+.floating-dock-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  max-width: calc(100vw - 32px);
+}
+
+.floating-dock-container.dock-hidden {
+  transform: translate(-50%, 120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.floating-dock-nav {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: rgba(11, 25, 44, 0.84);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(69, 137, 255, 0.28);
+  border-radius: 9999px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 
+              0 0 1px 1px rgba(69, 137, 255, 0.25),
+              inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.floating-dock-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.floating-dock-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 9999px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.floating-dock-tab svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.floating-dock-tab:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(69, 137, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.floating-dock-tab:hover svg {
+  transform: scale(1.12);
+  stroke: #60A5FA;
+}
+
+.floating-dock-tab.active {
+  color: #FFFFFF;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(15, 98, 254, 0.35) 0%, rgba(0, 67, 206, 0.45) 100%);
+  border: 1px solid rgba(69, 137, 255, 0.5);
+  box-shadow: 0 2px 12px rgba(15, 98, 254, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.floating-dock-tab.active svg {
+  stroke: #93C5FD;
+}
+
+.floating-dock-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #60A5FA;
+  box-shadow: 0 0 6px #60A5FA;
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.floating-dock-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(69, 137, 255, 0.25);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+body {
+  padding-bottom: 78px;
+}
+
+@media (max-width: 900px) {
+  .floating-dock-container {
+    bottom: max(14px, env(safe-area-inset-bottom, 14px));
+    max-width: calc(100vw - 20px);
+  }
+  .floating-dock-nav {
+    padding: 5px 6px;
+    gap: 3px;
+  }
+  .floating-dock-tab {
+    padding: 6px 10px;
+    font-size: 0.775rem;
+    gap: 5px;
+  }
+  .admin-float-btn {
+    bottom: 86px;
+    right: 16px;
+  }
+}
+
+@media (max-width: 680px) {
+  .floating-dock-tab span.tab-label {
+    display: none;
+  }
+  .floating-dock-tab {
+    padding: 9px 11px;
+    min-height: 42px;
+    min-width: 42px;
+    justify-content: center;
+  }
+  .floating-dock-tab.active span.tab-label {
+    display: inline;
+    font-size: 0.75rem;
+  }
+  .floating-dock-tab svg {
+    width: 18px;
+    height: 18px;
+  }
+}
