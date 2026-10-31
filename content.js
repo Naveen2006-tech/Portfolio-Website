@@ -1157,6 +1157,9 @@ function renderPortfolioContentToDOM(content) {
     }
   });
 
+  if (typeof setupAllSectionsMovingStreams === "function") {
+    setupAllSectionsMovingStreams();
+  }
   if (typeof setupInteractiveFloatingCards === "function") {
     setupInteractiveFloatingCards();
   }
@@ -1642,27 +1645,35 @@ function escapeHTML(str) {
 }
 
 /**
- * 3D Interactive Floating Physics & Mouse Spotlight Glow
- * Adds subtle physical depth, dynamic tilt, and glowing highlights to project cards and others
+ * 3D Interactive Floating Physics & Mouse Spotlight Glow Across ALL Sections
+ * Adds physical depth, dynamic tilt, and glowing highlights to cards on every page
  */
 function setupInteractiveFloatingCards() {
   const cardSelectors = [
+    ".card",
     ".project-card",
     ".cert-card",
     ".paper-card",
     ".skill-card",
     ".achievement-card",
     ".timeline-card",
-    ".profile-card"
+    ".profile-card",
+    ".education-card",
+    ".contact-card",
+    ".resume-paper-card",
+    ".resume-experience-item",
+    ".contact-item-card",
+    ".query-persona-card",
+    ".stat-item",
+    ".cert-stat-card"
   ];
 
   const cards = document.querySelectorAll(cardSelectors.join(", "));
   cards.forEach((card) => {
-    // Avoid double attaching
     if (card._hasFloatingPhysics) return;
     card._hasFloatingPhysics = true;
 
-    // Mousemove 3D tilt calculation
+    // Mousemove 3D perspective tilt & spotlight tracking
     card.addEventListener("mousemove", (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -1675,8 +1686,8 @@ function setupInteractiveFloatingCards() {
       // Gentle 3D perspective rotation
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      const rotateX = (((y - centerY) / centerY) * -5.5).toFixed(2);
-      const rotateY = (((x - centerX) / centerX) * 5.5).toFixed(2);
+      const rotateX = (((y - centerY) / centerY) * -5).toFixed(2);
+      const rotateY = (((x - centerX) / centerX) * 5).toFixed(2);
 
       card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale3d(1.015, 1.015, 1.015)`;
     });
@@ -1691,137 +1702,204 @@ function setupInteractiveFloatingCards() {
 }
 
 /**
- * Continuous Moving Information Stream / Marquee
- * Showcases live moving project highlights, achievements, and core competencies
+ * Universal Moving Information Marquee Generator
+ * Mounts smooth animated moving streams across all sections of the portfolio
  */
-function setupMovingInformationStream() {
-  // Prevent duplicate insertion
-  if (document.getElementById("movingInfoMarquee")) return;
+function createSectionMarquee({ id, title, targetSelector, track1, track2 }) {
+  if (document.getElementById(id)) return;
+  const target = document.querySelector(targetSelector);
+  if (!target) return;
 
-  const projectsGrid = document.getElementById("projectsGrid");
-  if (!projectsGrid) return;
+  const renderPills = (items) => {
+    return items.map((item) => {
+      const onClickAttr = item.targetText ? `onclick="highlightTargetCard('${escapeHTML(item.targetText)}')"` : "";
+      return `
+        <div class="moving-info-pill" ${onClickAttr}>
+          <span class="pill-icon">${item.icon || "⚡"}</span>
+          <span class="pill-category">${escapeHTML(item.category || "Highlight")}</span>
+          <span class="pill-title">${escapeHTML(item.title)}</span>
+          ${item.sub ? `<span class="pill-sub">[ ${escapeHTML(item.sub)} ]</span>` : ""}
+        </div>
+      `;
+    }).join("");
+  };
 
-  // Retrieve current projects & achievements from memory/localStorage
-  let projectsList = [];
-  try {
-    const raw = localStorage.getItem("portfolioCustomProjects");
-    if (raw) projectsList = JSON.parse(raw);
-  } catch (_) {}
+  const track1Html = renderPills(track1);
+  const track2Html = renderPills(track2);
 
-  if (!projectsList || projectsList.length === 0) {
-    projectsList = [
-      {
-        title: "FPGA-Based UART Transmitter & Receiver",
-        tags: ["Verilog HDL", "115200 Baud", "Nexys A7", "FIFO Buffering"],
-        icon: "🚀"
-      },
-      {
-        title: "4-Bit Ripple Carry Adder",
-        tags: ["Full Adder RTL", "Prop Delay Opt", "Vivado Synthesis"],
-        icon: "⚡"
-      },
-      {
-        title: "Traffic Light Controller FSM",
-        tags: ["Mealy/Moore FSM", "RTL Verification", "Basys3"],
-        icon: "🚦"
-      },
-      {
-        title: "CMOS Inverter DC & Transient Analysis",
-        tags: ["Cadence Virtuoso", "Noise Margin", "Power-Delay"],
-        icon: "🔬"
-      },
-      {
-        title: "IoT Smart Automation Prototype",
-        tags: ["ESP32 MCU", "Sensor Fusion", "Embedded C"],
-        icon: "🏠"
-      }
-    ];
-  }
-
-  const track1Items = projectsList.map((p, idx) => {
-    const icon = p.icon || (idx % 2 === 0 ? "🚀" : "⚡");
-    const title = p.title || p.name || "VLSI Project";
-    const tagText = Array.isArray(p.tags) ? p.tags.slice(0, 2).join(" • ") : "Verilog HDL • RTL";
-    return `
-      <div class="moving-info-pill" onclick="highlightProjectTarget('${escapeHTML(title)}')">
-        <span class="pill-icon">${icon}</span>
-        <span class="pill-category">Project</span>
-        <span class="pill-title">${escapeHTML(title)}</span>
-        <span class="pill-sub">[ ${escapeHTML(tagText)} ]</span>
-      </div>
-    `;
-  }).join("");
-
-  const track2Items = `
-    <div class="moving-info-pill">
-      <span class="pill-icon">🥈</span>
-      <span class="pill-category">Honors</span>
-      <span class="pill-title">VIDYUTSAVA National Symposium</span>
-      <span class="pill-sub">2nd Place in Hardware & RTL Design</span>
-    </div>
-    <div class="moving-info-pill">
-      <span class="pill-icon">⭐</span>
-      <span class="pill-category">Challenge</span>
-      <span class="pill-title">IMPULSE-2026 Circuit Challenge</span>
-      <span class="pill-sub">Top 5th Rank State-Level</span>
-    </div>
-    <div class="moving-info-pill">
-      <span class="pill-icon">💡</span>
-      <span class="pill-category">Hackathon</span>
-      <span class="pill-title">EMERGE National Hackathon</span>
-      <span class="pill-sub">Best Innovation in Embedded Systems</span>
-    </div>
-    <div class="moving-info-pill">
-      <span class="pill-icon">📜</span>
-      <span class="pill-category">Research</span>
-      <span class="pill-title">Micro-Architectural Optimizations</span>
-      <span class="pill-sub">Technical Paper on Digital RTL Efficiency</span>
-    </div>
-    <div class="moving-info-pill">
-      <span class="pill-icon">🛠️</span>
-      <span class="pill-category">Core Stack</span>
-      <span class="pill-title">Verilog HDL • FPGA • RTL • CMOS</span>
-      <span class="pill-sub">Xilinx Vivado • Cadence Virtuoso</span>
-    </div>
-  `;
-
-  const marqueeContainer = document.createElement("div");
-  marqueeContainer.id = "movingInfoMarquee";
-  marqueeContainer.className = "moving-info-marquee-container";
-  marqueeContainer.innerHTML = `
+  const container = document.createElement("div");
+  container.id = id;
+  container.className = "moving-info-marquee-container";
+  container.innerHTML = `
     <div class="moving-info-header">
       <div class="moving-info-title">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-        Live Moving Project Highlights & Honors Stream
+        ${escapeHTML(title)}
       </div>
       <div class="moving-info-status">
         <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
-        <span>Hover to inspect • Click to jump</span>
+        <span>Moving Stream • Hover to inspect</span>
       </div>
     </div>
     <div class="moving-info-track-wrapper">
       <div class="moving-info-track">
-        ${track1Items}
-        ${track1Items}
+        ${track1Html}
+        ${track1Html}
       </div>
     </div>
     <div class="moving-info-track-wrapper">
       <div class="moving-info-track reverse">
-        ${track2Items}
-        ${track2Items}
+        ${track2Html}
+        ${track2Html}
       </div>
     </div>
   `;
 
-  // Insert before the projects grid
-  projectsGrid.parentNode.insertBefore(marqueeContainer, projectsGrid);
+  target.parentNode.insertBefore(container, target);
 }
 
-// Global helper to smoothly scroll to and highlight a project card
-window.highlightProjectTarget = function(projectTitle) {
-  const cards = document.querySelectorAll(".project-card");
+/**
+ * Continuous Moving Information Streams in ALL Sections
+ */
+function setupAllSectionsMovingStreams() {
+  // 1. PROJECTS SECTION MARQUEE (projects.html & index.html)
+  createSectionMarquee({
+    id: "marquee_projects",
+    title: "Live Moving Projects & Hardware Architectures",
+    targetSelector: "#projectsGrid",
+    track1: [
+      { icon: "🚀", category: "FPGA Design", title: "UART Transmitter & Receiver", sub: "Verilog HDL • 115200 Baud • Nexys A7", targetText: "UART" },
+      { icon: "⚡", category: "RTL Logic", title: "4-Bit Ripple Carry Adder", sub: "Full Adder Chain • Prop Delay Opt • Vivado", targetText: "Ripple Carry" },
+      { icon: "🚦", category: "FSM Controller", title: "Traffic Light Controller", sub: "Mealy/Moore FSM • RTL Verification • Basys3", targetText: "Traffic Light" },
+      { icon: "🔬", category: "CMOS IC", title: "CMOS Inverter DC & Transient", sub: "Cadence Virtuoso • Noise Margin • Power-Delay", targetText: "CMOS Inverter" },
+      { icon: "🏠", category: "Embedded / IoT", title: "IoT Smart Automation Prototype", sub: "ESP32 MCU • Sensor Fusion • Embedded C", targetText: "Automation" }
+    ],
+    track2: [
+      { icon: "⚙️", category: "Specs", title: "115200 Baud Rate Generator", sub: "Clock Frequency Division • Parity Bit Engine" },
+      { icon: "⏱️", category: "Timing", title: "Setup & Hold Slack Optimization", sub: "Static Timing Analysis • Zero Violations" },
+      { icon: "🧪", category: "Simulation", title: "Cadence Spectre & ModelSim Testbenches", sub: "100% RTL Functional Coverage" },
+      { icon: "💡", category: "Prototyping", title: "Xilinx Vivado Bitstream Generation", sub: "Hardware Debugging & Constraint Files" },
+      { icon: "📊", category: "Synthesis", title: "Gate-Level Netlist Area Minimization", sub: "Low Power High Performance" }
+    ]
+  });
+
+  // 2. SKILLS SECTION MARQUEE (skills.html & index.html)
+  createSectionMarquee({
+    id: "marquee_skills",
+    title: "Live Moving VLSI Engineering Stack & EDA Tools",
+    targetSelector: "#skillsGrid",
+    track1: [
+      { icon: "💻", category: "HDL", title: "Verilog HDL & SystemVerilog", sub: "RTL Modeling • Behavioral & Structural", targetText: "Verilog" },
+      { icon: "⚡", category: "Hardware", title: "FPGA Prototyping", sub: "Xilinx Nexys A7 • Basys 3 • Vivado", targetText: "FPGA" },
+      { icon: "🔬", category: "EDA Suite", title: "Cadence Virtuoso & Spectre", sub: "Custom IC Schematic • Transient DC Sim", targetText: "EDA" },
+      { icon: "🛠️", category: "Synthesis", title: "Xilinx Vivado Design Suite", sub: "RTL Analysis • Synthesis • Implementation", targetText: "Vivado" },
+      { icon: "⏱️", category: "Verification", title: "Static Timing Analysis (STA)", sub: "Setup/Hold Margins • Clock Skew" }
+    ],
+    track2: [
+      { icon: "🧩", category: "Core Circuit", title: "CMOS & Digital Logic Design", sub: "Combinational & Sequential Circuits" },
+      { icon: "🚦", category: "State Machines", title: "Finite State Machine (FSM) Design", sub: "Mealy & Moore State Encoding" },
+      { icon: "🔌", category: "Protocols", title: "Hardware Interfacing Protocols", sub: "UART • SPI • I2C Protocols" },
+      { icon: "⚙️", category: "Firmware", title: "C / C++ Embedded Programming", sub: "Microcontroller Firmware & Registers" },
+      { icon: "🐍", category: "Scripting", title: "Python for Hardware Automation", sub: "Data Parsing & Test Vector Generation" }
+    ]
+  });
+
+  // 3. ACHIEVEMENTS & HACKATHONS MARQUEE (about.html, certificates.html, resume.html, index.html)
+  const achTargets = ["#aboutAchievementsGrid", "#certsAchievementsGrid", "#homeAchievementsGrid", "#resumeAchievementsGrid"];
+  achTargets.forEach((sel, i) => {
+    createSectionMarquee({
+      id: `marquee_achievements_${i}`,
+      title: "Live Moving Honors, Symposiums & Hackathon Wins",
+      targetSelector: sel,
+      track1: [
+        { icon: "🥈", category: "2nd Place", title: "VIDYUTSAVA National Project Symposium", sub: "Hardware Project & RTL Design Winner", targetText: "VIDYUTSAVA" },
+        { icon: "⭐", category: "Top 5th", title: "IMPULSE-2026 Circuit Challenge", sub: "State-Level Hardware & Digital Design", targetText: "IMPULSE" },
+        { icon: "💡", category: "Winner", title: "EMERGE National Hackathon", sub: "Best Innovation in Embedded Systems", targetText: "EMERGE" },
+        { icon: "🏆", category: "Excellence", title: "National Level Technical Competitions", sub: "Circuit Debugging & Hardware Presentation" }
+      ],
+      track2: [
+        { icon: "📜", category: "Paper", title: "Academic Technical Paper Presentation", sub: "Digital VLSI Architecture Optimization" },
+        { icon: "🎯", category: "Symposium", title: "Inter-College Project Symposium Finalist", sub: "Live FPGA Hardware Demonstration" },
+        { icon: "⚡", category: "Department", title: "ECE Department Academic Honors", sub: "Excellence in Digital Circuit Design" },
+        { icon: "🤝", category: "Team Lead", title: "Hackathon Hardware Team Lead", sub: "Embedded Prototype & Sensor Integration" }
+      ]
+    });
+  });
+
+  // 4. PAPERS SECTION MARQUEE (papers.html)
+  createSectionMarquee({
+    id: "marquee_papers",
+    title: "Live Moving Technical Research & Publications Stream",
+    targetSelector: "#papersGrid",
+    track1: [
+      { icon: "📜", category: "Publication", title: "Micro-Architectural Optimizations in Digital Systems", sub: "RTL Area & Power Minimization", targetText: "Architectural" },
+      { icon: "🔬", category: "Device Study", title: "CMOS Inverter Dynamic Switching Characterization", sub: "Noise Margin & Propagation Delay", targetText: "CMOS" },
+      { icon: "⚡", category: "Arithmetic", title: "High-Performance ALU Architectures", sub: "Carry-Lookahead vs Ripple-Carry Tradeoffs" }
+    ],
+    track2: [
+      { icon: "📑", category: "Conference", title: "Presented at National Technical Symposiums", sub: "Peer-Reviewed Engineering Proceedings" },
+      { icon: "📊", category: "EDA Grounding", title: "Cadence Virtuoso Simulation Benchmarks", sub: "Nanometer Regime Transient Data" },
+      { icon: "🎯", category: "Open Science", title: "Google Drive Full Papers & Certifications", sub: "Transparent Verification & Slides" }
+    ]
+  });
+
+  // 5. CERTIFICATES SECTION MARQUEE (certificates.html)
+  createSectionMarquee({
+    id: "marquee_certs",
+    title: "Live Moving Verified Credentials & Certifications Stream",
+    targetSelector: "#certsGrid",
+    track1: [
+      { icon: "🏅", category: "Certified", title: "VLSI System Design & Digital Verification", sub: "RTL Design & Timing Closure Concepts", targetText: "VLSI" },
+      { icon: "📜", category: "FPGA", title: "FPGA Architecture & Vivado RTL Synthesis", sub: "Xilinx Hardware Implementation", targetText: "FPGA" },
+      { icon: "🎖️", category: "Semiconductor", title: "Semiconductor Technology & CMOS Fundamentals", sub: "Device Physics & Layout Foundations", targetText: "Semiconductor" }
+    ],
+    track2: [
+      { icon: "✅", category: "University", title: "Visvesvaraya Technological University (VTU)", sub: "Accredited Electronics & Communication Engineering" },
+      { icon: "🏆", category: "Recognition", title: "National Level Project Symposium Accreditations", sub: "Presentation & Hardware Demo Verified" },
+      { icon: "💡", category: "Practical", title: "Industrial Workshop Credentials", sub: "Modern Semiconductor & EDA Workflows" }
+    ]
+  });
+
+  // 6. RESUME SECTION MARQUEE (resume.html)
+  createSectionMarquee({
+    id: "marquee_resume",
+    title: "Live Moving Resume Highlights & Career Focus",
+    targetSelector: ".resume-paper-card, #resumeEducationGrid",
+    track1: [
+      { icon: "🎓", category: "Degree", title: "B.E. Electronics & Communication Engineering", sub: "VTU Affiliated • Hiriyur, Karnataka" },
+      { icon: "💼", category: "Target Roles", title: "VLSI Intern • RTL Design Engineer • FPGA Engineer", sub: "Ready for Immediate Internship & Entry Roles" },
+      { icon: "📍", category: "Location", title: "Hiriyur / Bengaluru, Karnataka, India", sub: "Available In-Person, Hybrid & Relocation" }
+    ],
+    track2: [
+      { icon: "⚡", category: "Technical Core", title: "Verilog HDL • FPGA • RTL • CMOS • Vivado • Virtuoso", sub: "Hands-on Hardware Experience" },
+      { icon: "🥈", category: "Distinction", title: "VIDYUTSAVA 2nd Place • IMPULSE-2026 Top 5th", sub: "Proven Competitive Track Record" },
+      { icon: "📄", category: "Verified PDF", title: "Downloadable Professional Resume (PDF)", sub: "Detailed Project & Academic History" }
+    ]
+  });
+
+  // 7. CONTACT SECTION MARQUEE (contact.html)
+  createSectionMarquee({
+    id: "marquee_contact",
+    title: "Live Moving Communication Channels & Availability Stream",
+    targetSelector: "#queryForm, .contact-card",
+    track1: [
+      { icon: "⚡", category: "Fast Response", title: "Recruiter Fast-Track Active", sub: "Priority Review for VLSI Opportunities" },
+      { icon: "✉️", category: "Direct Email", title: "naveenkrishnamurthy2006@gmail.com", sub: "Checked Regularly • 24hr Turnaround" },
+      { icon: "💼", category: "Opportunities", title: "VLSI Internships & Full-Time Entry Roles", sub: "Immediate Joining Availability" }
+    ],
+    track2: [
+      { icon: "🌐", category: "Network", title: "LinkedIn Professional Profile Connected", sub: "Engineering Peers & Recruiters Welcome" },
+      { icon: "💡", category: "Discussions", title: "Hardware, RTL & Research Collaboration", sub: "Open for Peer Projects & Technical Exchanges" },
+      { icon: "📍", category: "Base", title: "Hiriyur / Bengaluru, Karnataka, India", sub: "Flexible for Global & Regional Teams" }
+    ]
+  });
+}
+
+// Global helper to smoothly scroll to and highlight any card target
+window.highlightTargetCard = function(textToFind) {
+  const cards = document.querySelectorAll(".card, .project-card, .cert-card, .paper-card, .skill-card, .achievement-card");
   for (const card of cards) {
-    if (card.textContent.toLowerCase().includes(projectTitle.toLowerCase())) {
+    if (card.textContent.toLowerCase().includes(textToFind.toLowerCase())) {
       card.scrollIntoView({ behavior: "smooth", block: "center" });
       const origBorder = card.style.borderColor;
       const origBoxShadow = card.style.boxShadow;
@@ -1846,7 +1924,7 @@ function initPortfolioApp() {
   setupNavigation();
   setupContactForm();
   setupSmoothScrolling();
-  setupMovingInformationStream();
+  setupAllSectionsMovingStreams();
   setupInteractiveFloatingCards();
 }
 

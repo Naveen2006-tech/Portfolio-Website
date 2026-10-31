@@ -1998,14 +1998,21 @@ body {
    FLOATING & MOVING INFORMATION IN PROJECTS & OTHERS
    ======================================================== */
 
-/* 1. Ambient & 3D Interactive Floating Physics on Cards */
+/* 1. Ambient & 3D Interactive Floating Physics on Cards Across ALL Sections */
 .card,
 .project-card,
 .skill-card,
 .cert-card,
 .paper-card,
 .achievement-card,
-.timeline-card {
+.timeline-card,
+.profile-card,
+.education-card,
+.contact-card,
+.resume-paper-card,
+.resume-experience-item,
+.contact-item-card,
+.query-persona-card {
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
               box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.25s ease;
@@ -2014,18 +2021,23 @@ body {
   position: relative;
 }
 
-/* Soft ambient floating oscillation */
+/* Soft ambient floating oscillation across all sections */
 .project-card:nth-child(odd),
 .cert-card:nth-child(odd),
 .paper-card:nth-child(odd),
-.achievement-card:nth-child(odd) {
+.achievement-card:nth-child(odd),
+.skill-card:nth-child(odd),
+.timeline-card:nth-child(odd),
+.profile-card {
   animation: cardFloatSoft 7s ease-in-out infinite;
 }
 
 .project-card:nth-child(even),
 .cert-card:nth-child(even),
 .paper-card:nth-child(even),
-.achievement-card:nth-child(even) {
+.achievement-card:nth-child(even),
+.skill-card:nth-child(even),
+.timeline-card:nth-child(even) {
   animation: cardFloatSoftAlt 8s ease-in-out infinite;
   animation-delay: -3.5s;
 }
@@ -2054,7 +2066,14 @@ body {
 .skill-card:hover,
 .cert-card:hover,
 .paper-card:hover,
-.achievement-card:hover {
+.achievement-card:hover,
+.timeline-card:hover,
+.profile-card:hover,
+.education-card:hover,
+.contact-card:hover,
+.resume-paper-card:hover,
+.resume-experience-item:hover,
+.contact-item-card:hover {
   animation-play-state: paused;
   transform: translateY(-10px) scale(1.015);
   box-shadow: 0 22px 48px -10px rgba(15, 98, 254, 0.38),
@@ -2065,10 +2084,17 @@ body {
 }
 
 /* Dynamic moving spotlight radial gradient following mouse */
+.card::before,
 .project-card::before,
 .cert-card::before,
 .paper-card::before,
-.achievement-card::before {
+.achievement-card::before,
+.skill-card::before,
+.timeline-card::before,
+.profile-card::before,
+.education-card::before,
+.contact-card::before,
+.resume-paper-card::before {
   content: "";
   position: absolute;
   top: 0;
@@ -2087,18 +2113,29 @@ body {
   z-index: 1;
 }
 
+.card:hover::before,
 .project-card:hover::before,
 .cert-card:hover::before,
 .paper-card:hover::before,
-.achievement-card:hover::before {
+.achievement-card:hover::before,
+.skill-card:hover::before,
+.timeline-card:hover::before,
+.profile-card:hover::before,
+.education-card:hover::before,
+.contact-card:hover::before,
+.resume-paper-card:hover::before {
   opacity: 1;
 }
 
 /* Card content stays above spotlight */
+.card > *,
 .project-card > *,
 .cert-card > *,
 .paper-card > *,
-.achievement-card > * {
+.achievement-card > *,
+.skill-card > *,
+.timeline-card > *,
+.profile-card > * {
   position: relative;
   z-index: 2;
 }
@@ -2106,12 +2143,15 @@ body {
 /* Floating interactive tags and chips */
 .project-card .tag,
 .project-card .badge,
+.skill-card .tag,
+.skill-card .badge,
 .profile-badges .badge,
 .stat-item {
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.project-card:hover .tag {
+.project-card:hover .tag,
+.skill-card:hover .tag {
   transform: translateY(-2px);
   border-color: rgba(69, 137, 255, 0.5);
   background: rgba(15, 98, 254, 0.25);
