@@ -1156,6 +1156,10 @@ function renderPortfolioContentToDOM(content) {
       }
     }
   });
+
+  if (typeof setupInteractiveFloatingCards === "function") {
+    setupInteractiveFloatingCards();
+  }
 }
 
 // Global Lightbox preview handler
@@ -1638,133 +1642,201 @@ function escapeHTML(str) {
 }
 
 /**
- * Modern Floating Tabs Navigation Dock
- * Renders a frosted-glass floating navigation pill with active tracking and responsive collapse
+ * 3D Interactive Floating Physics & Mouse Spotlight Glow
+ * Adds subtle physical depth, dynamic tilt, and glowing highlights to project cards and others
  */
-function setupFloatingTabs() {
-  if (window.location.pathname.includes("admin") || document.getElementById("dashboardSection")) {
-    return;
-  }
-
-  // Prevent duplicate mounts
-  if (document.getElementById("floatingTabsDock")) return;
-
-  const currentPath = window.location.pathname.replace(/^\/+/, "").toLowerCase() || "index.html";
-
-  const tabsConfig = [
-    {
-      id: "tab-home",
-      label: "Home",
-      url: "index.html",
-      match: ["", "index.html", "index"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`
-    },
-    {
-      id: "tab-about",
-      label: "About",
-      url: "about.html",
-      match: ["about.html", "about"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
-    },
-    {
-      id: "tab-skills",
-      label: "Skills",
-      url: "skills.html",
-      match: ["skills.html", "skills"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`
-    },
-    {
-      id: "tab-projects",
-      label: "Projects",
-      url: "projects.html",
-      match: ["projects.html", "projects"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
-    },
-    {
-      id: "tab-papers",
-      label: "Papers",
-      url: "papers.html",
-      match: ["papers.html", "papers"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`
-    },
-    {
-      id: "tab-certs",
-      label: "Certificates",
-      url: "certificates.html",
-      match: ["certificates.html", "certificates"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>`
-    },
-    {
-      id: "tab-resume",
-      label: "Resume",
-      url: "resume.html",
-      match: ["resume.html", "resume"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`
-    },
-    {
-      id: "tab-contact",
-      label: "Contact",
-      url: "contact.html",
-      match: ["contact.html", "contact"],
-      icon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`
-    }
+function setupInteractiveFloatingCards() {
+  const cardSelectors = [
+    ".project-card",
+    ".cert-card",
+    ".paper-card",
+    ".skill-card",
+    ".achievement-card",
+    ".timeline-card",
+    ".profile-card"
   ];
 
-  const container = document.createElement("div");
-  container.id = "floatingTabsDock";
-  container.className = "floating-dock-container";
-  container.setAttribute("role", "navigation");
-  container.setAttribute("aria-label", "Floating Navigation Dock");
+  const cards = document.querySelectorAll(cardSelectors.join(", "));
+  cards.forEach((card) => {
+    // Avoid double attaching
+    if (card._hasFloatingPhysics) return;
+    card._hasFloatingPhysics = true;
 
-  const nav = document.createElement("nav");
-  nav.className = "floating-dock-nav";
+    // Mousemove 3D tilt calculation
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-  tabsConfig.forEach(tab => {
-    const isActive = tab.match.some(m => 
-      currentPath.endsWith(m) || 
-      currentPath === m || 
-      (m === "" && (currentPath === "index.html" || currentPath === "" || currentPath === "/"))
-    );
+      // Update spotlight position
+      card.style.setProperty("--spotlight-x", `${x}px`);
+      card.style.setProperty("--spotlight-y", `${y}px`);
 
-    const a = document.createElement("a");
-    a.href = tab.url;
-    a.className = `floating-dock-tab ${isActive ? "active" : ""}`;
-    a.title = tab.label;
-    if (isActive) a.setAttribute("aria-current", "page");
+      // Gentle 3D perspective rotation
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (((y - centerY) / centerY) * -5.5).toFixed(2);
+      const rotateY = (((x - centerX) / centerX) * 5.5).toFixed(2);
 
-    a.innerHTML = `
-      ${tab.icon}
-      <span class="tab-label">${escapeHTML(tab.label)}</span>
-      ${isActive ? `<span class="floating-dock-dot"></span>` : ""}
-    `;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale3d(1.015, 1.015, 1.015)`;
+    });
 
-    nav.appendChild(a);
+    // Reset smoothly on mouse leave
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "";
+      card.style.removeProperty("--spotlight-x");
+      card.style.removeProperty("--spotlight-y");
+    });
   });
-
-  container.appendChild(nav);
-  document.body.appendChild(container);
-
-  // Modern smart scroll behavior: hide on fast scroll down, reveal on scroll up
-  let lastScrollY = window.scrollY;
-  let ticking = false;
-
-  window.addEventListener("scroll", () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY;
-        // Don't hide if near the top
-        if (currentScrollY > 150 && currentScrollY > lastScrollY + 12) {
-          container.classList.add("dock-hidden");
-        } else if (currentScrollY < lastScrollY - 6 || currentScrollY <= 90) {
-          container.classList.remove("dock-hidden");
-        }
-        lastScrollY = currentScrollY;
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
 }
+
+/**
+ * Continuous Moving Information Stream / Marquee
+ * Showcases live moving project highlights, achievements, and core competencies
+ */
+function setupMovingInformationStream() {
+  // Prevent duplicate insertion
+  if (document.getElementById("movingInfoMarquee")) return;
+
+  const projectsGrid = document.getElementById("projectsGrid");
+  if (!projectsGrid) return;
+
+  // Retrieve current projects & achievements from memory/localStorage
+  let projectsList = [];
+  try {
+    const raw = localStorage.getItem("portfolioCustomProjects");
+    if (raw) projectsList = JSON.parse(raw);
+  } catch (_) {}
+
+  if (!projectsList || projectsList.length === 0) {
+    projectsList = [
+      {
+        title: "FPGA-Based UART Transmitter & Receiver",
+        tags: ["Verilog HDL", "115200 Baud", "Nexys A7", "FIFO Buffering"],
+        icon: "🚀"
+      },
+      {
+        title: "4-Bit Ripple Carry Adder",
+        tags: ["Full Adder RTL", "Prop Delay Opt", "Vivado Synthesis"],
+        icon: "⚡"
+      },
+      {
+        title: "Traffic Light Controller FSM",
+        tags: ["Mealy/Moore FSM", "RTL Verification", "Basys3"],
+        icon: "🚦"
+      },
+      {
+        title: "CMOS Inverter DC & Transient Analysis",
+        tags: ["Cadence Virtuoso", "Noise Margin", "Power-Delay"],
+        icon: "🔬"
+      },
+      {
+        title: "IoT Smart Automation Prototype",
+        tags: ["ESP32 MCU", "Sensor Fusion", "Embedded C"],
+        icon: "🏠"
+      }
+    ];
+  }
+
+  const track1Items = projectsList.map((p, idx) => {
+    const icon = p.icon || (idx % 2 === 0 ? "🚀" : "⚡");
+    const title = p.title || p.name || "VLSI Project";
+    const tagText = Array.isArray(p.tags) ? p.tags.slice(0, 2).join(" • ") : "Verilog HDL • RTL";
+    return `
+      <div class="moving-info-pill" onclick="highlightProjectTarget('${escapeHTML(title)}')">
+        <span class="pill-icon">${icon}</span>
+        <span class="pill-category">Project</span>
+        <span class="pill-title">${escapeHTML(title)}</span>
+        <span class="pill-sub">[ ${escapeHTML(tagText)} ]</span>
+      </div>
+    `;
+  }).join("");
+
+  const track2Items = `
+    <div class="moving-info-pill">
+      <span class="pill-icon">🥈</span>
+      <span class="pill-category">Honors</span>
+      <span class="pill-title">VIDYUTSAVA National Symposium</span>
+      <span class="pill-sub">2nd Place in Hardware & RTL Design</span>
+    </div>
+    <div class="moving-info-pill">
+      <span class="pill-icon">⭐</span>
+      <span class="pill-category">Challenge</span>
+      <span class="pill-title">IMPULSE-2026 Circuit Challenge</span>
+      <span class="pill-sub">Top 5th Rank State-Level</span>
+    </div>
+    <div class="moving-info-pill">
+      <span class="pill-icon">💡</span>
+      <span class="pill-category">Hackathon</span>
+      <span class="pill-title">EMERGE National Hackathon</span>
+      <span class="pill-sub">Best Innovation in Embedded Systems</span>
+    </div>
+    <div class="moving-info-pill">
+      <span class="pill-icon">📜</span>
+      <span class="pill-category">Research</span>
+      <span class="pill-title">Micro-Architectural Optimizations</span>
+      <span class="pill-sub">Technical Paper on Digital RTL Efficiency</span>
+    </div>
+    <div class="moving-info-pill">
+      <span class="pill-icon">🛠️</span>
+      <span class="pill-category">Core Stack</span>
+      <span class="pill-title">Verilog HDL • FPGA • RTL • CMOS</span>
+      <span class="pill-sub">Xilinx Vivado • Cadence Virtuoso</span>
+    </div>
+  `;
+
+  const marqueeContainer = document.createElement("div");
+  marqueeContainer.id = "movingInfoMarquee";
+  marqueeContainer.className = "moving-info-marquee-container";
+  marqueeContainer.innerHTML = `
+    <div class="moving-info-header">
+      <div class="moving-info-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        Live Moving Project Highlights & Honors Stream
+      </div>
+      <div class="moving-info-status">
+        <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
+        <span>Hover to inspect • Click to jump</span>
+      </div>
+    </div>
+    <div class="moving-info-track-wrapper">
+      <div class="moving-info-track">
+        ${track1Items}
+        ${track1Items}
+      </div>
+    </div>
+    <div class="moving-info-track-wrapper">
+      <div class="moving-info-track reverse">
+        ${track2Items}
+        ${track2Items}
+      </div>
+    </div>
+  `;
+
+  // Insert before the projects grid
+  projectsGrid.parentNode.insertBefore(marqueeContainer, projectsGrid);
+}
+
+// Global helper to smoothly scroll to and highlight a project card
+window.highlightProjectTarget = function(projectTitle) {
+  const cards = document.querySelectorAll(".project-card");
+  for (const card of cards) {
+    if (card.textContent.toLowerCase().includes(projectTitle.toLowerCase())) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      const origBorder = card.style.borderColor;
+      const origBoxShadow = card.style.boxShadow;
+      card.style.borderColor = "#60A5FA";
+      card.style.boxShadow = "0 0 24px rgba(96, 165, 250, 0.65)";
+      card.style.transform = "scale(1.025) translateY(-8px)";
+      setTimeout(() => {
+        card.style.borderColor = origBorder;
+        card.style.boxShadow = origBoxShadow;
+        card.style.transform = "";
+      }, 2400);
+      return;
+    }
+  }
+};
 
 /**
  * Robust Initialization (DOM ready or already loaded)
@@ -1774,7 +1846,8 @@ function initPortfolioApp() {
   setupNavigation();
   setupContactForm();
   setupSmoothScrolling();
-  setupFloatingTabs();
+  setupMovingInformationStream();
+  setupInteractiveFloatingCards();
 }
 
 if (document.readyState === "loading") {
