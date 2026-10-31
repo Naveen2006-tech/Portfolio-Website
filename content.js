@@ -6,6 +6,146 @@
  * (Note: Public pages do not show edit controls; edit icons are exclusive to admin.html)
  */
 
+// Default Education records (matches Supabase database)
+const DEFAULT_EDUCATION = [
+  {
+    id: "edu-1",
+    degree: "Bachelor of Engineering (B.E. / B.Tech) in Electronics & Communication Engineering",
+    institution: "S J M Institute of Technology , chitradurga",
+    year: "2024 - 2028",
+    score: "CGPA: 7.75 / 10.0",
+    location: "Chitradurga, Karnataka",
+    details: "Core Coursework: VLSI Design, Digital System Design, Computer Architecture, Electronic Circuits, Microprocessors & Microcontrollers, Signal Processing."
+  },
+  {
+    id: "edu-2",
+    degree: "Pre-University College (Class XII) - PCMC (Physics, Chemistry, Math, Biology)",
+    institution: "Presidency pre-university College ,Sira ,Tumkur",
+    year: "2024",
+    score: "Percentage: 89%",
+    location: "Sira, Tumkur, Karnataka",
+    details: "Ranked among top performers with distinction in Mathematics and Physics."
+  },
+  {
+    id: "edu-3",
+    degree: "Secondary School Examination (Class X)",
+    institution: "Morarji Desai Residential School (34) ,Yalladakere",
+    year: "2022",
+    score: "Percentage: 88%",
+    location: "Yalladakere, Hiriyur, Karnataka",
+    details: "Academic distinction with focus on foundational science and mathematics."
+  }
+];
+
+// Default Achievements & Hackathons (matches Supabase database)
+const DEFAULT_ACHIEVEMENTS = [
+  {
+    id: "ach-1",
+    title: "VIDYUTSAVA-2K26",
+    description: "Secured **2nd Place in the Technical Paper Presentation** at **VIDYUTSAVA-2K26**, organized by the EEE Department of S.J.M. Institute of Technology, Chitradurga, on 6 May 2026. Presented a technical paper titled *“Automatic Intelligent Waste Segregation System”*, highlighting innovative approaches to automated waste identification and segregation. This experience enhanced my research, technical communication, and presentation skills.",
+    isSample: false
+  },
+  {
+    id: "ach-2",
+    title: "IMPULSE-2026",
+    description: "Participated in **IMPULSE-2026**, an innovation-focused technical event organized at **Bapuji Institute of Engineering and Technology (BIET), Davanagere**. Took part in the Innomarathon, gaining valuable exposure to innovation, creative problem-solving, teamwork, and technical skills. The event provided an opportunity to explore innovative ideas, collaborate with fellow participants, and enhance practical engineering knowledge.",
+    isSample: false
+  },
+  {
+    id: "ach-3",
+    title: "EMERGE-2026",
+    description: "Participated in **EMERGE-2026**, a Hackathon organized at **Jain Institute of Technology, Davanagere**. The event provided an opportunity to showcase innovative thinking, develop creative solutions to real-world problems, and collaborate with fellow participants. It enhanced my problem-solving abilities, teamwork, technical knowledge, and practical engineering skills.",
+    isSample: false
+  }
+];
+
+// Default Technical Skills
+const DEFAULT_SKILLS = [
+  {
+    id: "skill-1",
+    title: "Verilog HDL & RTL Design",
+    category: "Hardware Description",
+    desc: "Synthesis-ready register-transfer-level design, behavioral and structural modeling, and finite state machines (FSM).",
+    tags: ["Verilog", "RTL", "FSM", "Digital Design"]
+  },
+  {
+    id: "skill-2",
+    title: "Digital Logic & Architecture",
+    category: "Core Digital Systems",
+    desc: "Combinational and sequential logic, arithmetic logic units, multiplexers, counters, and pipelined datapaths.",
+    tags: ["Digital Logic", "ALU", "Datapath", "Architecture"]
+  },
+  {
+    id: "skill-3",
+    title: "Digital Verification & Testbenches",
+    category: "Verification",
+    desc: "Architecting self-checking testbenches, edge-case test vectors, and timing simulation waveform debugging.",
+    tags: ["Verification", "Testbenches", "ModelSim", "Coverage"]
+  },
+  {
+    id: "skill-4",
+    title: "Xilinx Vivado & FPGA Prototyping",
+    category: "EDA & Tooling",
+    desc: "Synthesis, implementation, bitstream generation, XDC constraint assignment, and hardware board emulation.",
+    tags: ["Vivado", "FPGA", "Hardware Emulation", "Xilinx"]
+  },
+  {
+    id: "skill-5",
+    title: "CMOS VLSI & Transistor Sizing",
+    category: "Semiconductor Physics",
+    desc: "CMOS inverter voltage transfer characteristics (VTC), noise margins, propagation delay, and low-power techniques.",
+    tags: ["CMOS", "VTC", "Propagation Delay", "VLSI"]
+  },
+  {
+    id: "skill-6",
+    title: "Static Timing Analysis (STA)",
+    category: "Timing & Synthesis",
+    desc: "Analyzing setup/hold time margins, clock skew, critical timing paths, and maximum clock frequencies.",
+    tags: ["STA", "Setup/Hold", "Clock Constraints"]
+  },
+  {
+    id: "skill-7",
+    title: "C & Python for Engineering",
+    category: "Programming & Scripting",
+    desc: "Low-level firmware programming in C and automation, data manipulation, and verification scripting in Python.",
+    tags: ["C Programming", "Python", "Automation", "Firmware"]
+  },
+  {
+    id: "skill-8",
+    title: "Microcontrollers & Embedded Protocols",
+    category: "Embedded Hardware",
+    desc: "Microcontroller interfacing, serial communication protocols (UART, SPI, I2C), and peripheral control.",
+    tags: ["UART", "SPI", "I2C", "Embedded Systems"]
+  }
+];
+
+// Default Technical Papers
+const DEFAULT_PAPERS = [
+  {
+    id: "paper_vidyutsava_2k26",
+    title: "Automatic Intelligent Waste Segregation System",
+    event: "VIDYUTSAVA-2K26 - Technical Symposium",
+    date: "May 2026",
+    result: "2nd Place Award Winner",
+    authors: "Naveena K & Co-Presenter",
+    institution: "S.J.M. Institute of Technology, Chitradurga",
+    summary: "Technical presentation addressing automated waste categorization using intelligent sensing, embedded microcontroller control, and real-time segregation logic.",
+    abstract: "An automated intelligent waste sorting system designed to classify waste materials into recyclable and non-recyclable streams. Utilizes sensor-driven input processing and microcontroller-based automation to streamline sanitation operations.",
+    photos: []
+  }
+];
+
+/**
+ * Formats simple markdown bold (**text**) and italic (*text*) safely after HTML escaping
+ */
+function formatSimpleMarkdown(text) {
+  if (!text) return "";
+  let html = escapeHTML(text);
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #FFFFFF;">$1</strong>');
+  html = html.replace(/\*(.*?)\*/g, '<em style="color: #93C5FD;">$1</em>');
+  return html;
+}
+
 // Default portfolio content
 const DEFAULT_PORTFOLIO_CONTENT = {
   heroName: "Naveena K",
@@ -14,8 +154,8 @@ const DEFAULT_PORTFOLIO_CONTENT = {
   aboutEducation: "B.E. Electronics and Communication Engineering, Hiriyur, Karnataka",
   aboutGoal: "VLSI Design Engineer, Verification Engineer, or FPGA Engineer",
   
-  technicalPaper: null,
-  technicalPapers: [],
+  technicalPaper: DEFAULT_PAPERS[0],
+  technicalPapers: DEFAULT_PAPERS,
   profilePhoto: null,
 
   contactEmail: "naveenkrishnamurthy2006@gmail.com",
@@ -27,10 +167,12 @@ const DEFAULT_PORTFOLIO_CONTENT = {
   deletedCertificates: [],
   deletedSkills: [],
   customProjects: [],
-  customPapers: [],
+  customPapers: DEFAULT_PAPERS,
   customCertificates: [],
-  customSkills: [],
-  additionalAboutDetails: []
+  customSkills: DEFAULT_SKILLS,
+  additionalAboutDetails: [],
+  education: DEFAULT_EDUCATION,
+  achievements: DEFAULT_ACHIEVEMENTS
 };
 
 /**
@@ -71,10 +213,20 @@ function applyPortfolioContent() {
           res.fullData?.photoUrl ||
           null;
 
+        const ach = Array.isArray(res.portfolioContent?.achievements) && res.portfolioContent.achievements.length > 0
+          ? res.portfolioContent.achievements
+          : (Array.isArray(res.fullData?.achievements) && res.fullData.achievements.length > 0 ? res.fullData.achievements : DEFAULT_ACHIEVEMENTS);
+
+        const edu = Array.isArray(res.portfolioContent?.education) && res.portfolioContent.education.length > 0
+          ? res.portfolioContent.education
+          : (Array.isArray(res.fullData?.education) && res.fullData.education.length > 0 ? res.fullData.education : DEFAULT_EDUCATION);
+
         const liveContent = {
           ...DEFAULT_PORTFOLIO_CONTENT,
           ...(res.portfolioContent || {}),
-          profilePhoto: photo || res.portfolioContent?.profilePhoto || null
+          profilePhoto: photo || res.portfolioContent?.profilePhoto || null,
+          achievements: ach,
+          education: edu
         };
         renderPortfolioContentToDOM(liveContent);
       }
@@ -85,7 +237,20 @@ function applyPortfolioContent() {
     // 3. Register live viewer sync so admin edits immediately update viewer pages in real time
     if (typeof window.initLiveViewerSync === "function") {
       window.initLiveViewerSync((updatedContent) => {
-        const liveContent = { ...DEFAULT_PORTFOLIO_CONTENT, ...updatedContent };
+        const ach = Array.isArray(updatedContent.achievements) && updatedContent.achievements.length > 0
+          ? updatedContent.achievements
+          : DEFAULT_ACHIEVEMENTS;
+
+        const edu = Array.isArray(updatedContent.education) && updatedContent.education.length > 0
+          ? updatedContent.education
+          : DEFAULT_EDUCATION;
+
+        const liveContent = {
+          ...DEFAULT_PORTFOLIO_CONTENT,
+          ...updatedContent,
+          achievements: ach,
+          education: edu
+        };
         renderPortfolioContentToDOM(liveContent);
       });
     }
@@ -472,6 +637,10 @@ function renderPortfolioContentToDOM(content) {
       content.customPapers.forEach(p => { if (p && p.title) rawPapers.push(p); });
     }
 
+    if (rawPapers.length === 0) {
+      DEFAULT_PAPERS.forEach(p => rawPapers.push(p));
+    }
+
     // Deduplicate papers by title
     const uniquePapers = [];
     const seenPap = new Set();
@@ -592,123 +761,134 @@ function renderPortfolioContentToDOM(content) {
     window._papersListForModal = uniquePapers;
   }
 
-  // 7. Render Skills (on skills.html)
+  // 7. Render Skills (on skills.html & index.html)
   const skillsGrid = document.getElementById("skillsGrid");
-  if (skillsGrid) {
-    skillsGrid.innerHTML = ""; // Clean out previous cards to prevent duplicates
+  const homeSkillsGrid = document.getElementById("homeSkillsGrid");
 
-    const rawSkills = [];
-    if (Array.isArray(content.customSkills)) {
-      content.customSkills.forEach(s => { if (s && (s.title || s.name)) rawSkills.push(s); });
-    }
-    if (Array.isArray(content.skills)) {
-      content.skills.forEach(catOrSkill => {
-        if (!catOrSkill) return;
-        if (Array.isArray(catOrSkill.skills)) {
-          catOrSkill.skills.forEach(skillName => {
-            rawSkills.push({
-              title: skillName,
-              category: catOrSkill.name || "Domain Skill",
-              desc: `Practical competency in ${skillName}.`,
-              tags: [catOrSkill.name || "Engineering"]
-            });
+  const rawSkills = [];
+  if (Array.isArray(content.customSkills) && content.customSkills.length > 0) {
+    content.customSkills.forEach(s => { if (s && (s.title || s.name)) rawSkills.push(s); });
+  }
+  if (Array.isArray(content.skills) && content.skills.length > 0) {
+    content.skills.forEach(catOrSkill => {
+      if (!catOrSkill) return;
+      if (Array.isArray(catOrSkill.skills)) {
+        catOrSkill.skills.forEach(skillName => {
+          rawSkills.push({
+            title: skillName,
+            category: catOrSkill.name || "Domain Skill",
+            desc: `Practical competency in ${skillName}.`,
+            tags: [catOrSkill.name || "Engineering"]
           });
-        } else if (catOrSkill.title || catOrSkill.name) {
-          rawSkills.push(catOrSkill);
-        }
-      });
-    }
-
-    // Deduplicate skills by title
-    const uniqueSkills = [];
-    const seenS = new Set();
-    rawSkills.forEach(s => {
-      const name = (s.title || s.name || "").trim();
-      const key = name.toLowerCase();
-      if (key && !seenS.has(key)) {
-        seenS.add(key);
-        uniqueSkills.push({
-          id: s.id || ("skill_" + uniqueSkills.length),
-          title: name,
-          category: s.category || "VLSI Competency",
-          desc: s.desc || s.description || s.text || `Practical engineering proficiency in ${name}.`,
-          tags: Array.isArray(s.tags) ? s.tags : (s.tags ? String(s.tags).split(",") : ["Engineering"])
         });
+      } else if (catOrSkill.title || catOrSkill.name) {
+        rawSkills.push(catOrSkill);
       }
     });
+  }
 
-    if (uniqueSkills.length === 0) {
-      skillsGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
-          <div style="font-size: 2.2rem; margin-bottom: 12px;">🛠️</div>
-          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">No Skills in Database</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted); max-width: 440px; margin: 0 auto 16px;">All database skills have been permanently cleared. You can add technical skills through the Admin Portal.</p>
-          <a href="admin.html" class="btn btn-primary btn-sm">Open Admin Portal</a>
-        </div>
-      `;
-    } else {
-      uniqueSkills.forEach((s) => {
-        const domId = "custom_skill_" + s.id;
-        const card = document.createElement("div");
-        card.id = domId;
-        card.className = "card skill-card";
-        card.innerHTML = `
-          <div class="card-header-accent"></div>
-          <div class="skill-header">
-            <div class="skill-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-            </div>
-            <div>
-              <span class="skill-category">${escapeHTML(s.category || "VLSI Skill")}</span>
-              <h3 class="skill-title">${escapeHTML(s.title)}</h3>
-            </div>
-          </div>
-          <p class="skill-desc">${escapeHTML(s.desc || "")}</p>
-          <div class="tags" style="margin: 0; margin-top: auto;">
-            ${s.tags.map(t => `<span class="tag">${escapeHTML(String(t).trim())}</span>`).join("")}
-          </div>
-        `;
-        skillsGrid.appendChild(card);
+  // Fall back to default skills if database has no records
+  if (rawSkills.length === 0) {
+    DEFAULT_SKILLS.forEach(s => rawSkills.push(s));
+  }
+
+  // Deduplicate skills by title
+  const uniqueSkills = [];
+  const seenS = new Set();
+  rawSkills.forEach(s => {
+    const name = (s.title || s.name || "").trim();
+    const key = name.toLowerCase();
+    if (key && !seenS.has(key)) {
+      seenS.add(key);
+      uniqueSkills.push({
+        id: s.id || ("skill_" + uniqueSkills.length),
+        title: name,
+        category: s.category || "VLSI Competency",
+        desc: s.desc || s.description || s.text || `Practical engineering proficiency in ${name}.`,
+        tags: Array.isArray(s.tags) ? s.tags : (s.tags ? String(s.tags).split(",") : ["Engineering"])
       });
     }
+  });
+
+  if (skillsGrid) {
+    skillsGrid.innerHTML = "";
+    uniqueSkills.forEach((s) => {
+      const domId = "custom_skill_" + s.id;
+      const card = document.createElement("div");
+      card.id = domId;
+      card.className = "card skill-card";
+      card.innerHTML = `
+        <div class="card-header-accent"></div>
+        <div class="skill-header">
+          <div class="skill-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <div>
+            <span class="skill-category">${escapeHTML(s.category || "VLSI Skill")}</span>
+            <h3 class="skill-title">${escapeHTML(s.title)}</h3>
+          </div>
+        </div>
+        <p class="skill-desc">${escapeHTML(s.desc || "")}</p>
+        <div class="tags" style="margin: 0; margin-top: auto;">
+          ${s.tags.map(t => `<span class="tag">${escapeHTML(String(t).trim())}</span>`).join("")}
+        </div>
+      `;
+      skillsGrid.appendChild(card);
+    });
+  }
+
+  if (homeSkillsGrid) {
+    homeSkillsGrid.innerHTML = "";
+    const homeSkillsList = uniqueSkills.slice(0, 8);
+    homeSkillsList.forEach((s) => {
+      const card = document.createElement("div");
+      card.className = "card skill-card";
+      card.style.display = "flex";
+      card.style.flexDirection = "column";
+      card.innerHTML = `
+        <div class="card-header-accent"></div>
+        <div class="skill-header" style="margin-bottom: 8px;">
+          <div class="skill-icon" style="width: 32px; height: 32px; font-size: 0.9rem;">
+            ⚡
+          </div>
+          <div>
+            <span class="skill-category" style="font-size: 0.7rem;">${escapeHTML(s.category || "VLSI Skill")}</span>
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: #FFFFFF; margin: 0;">${escapeHTML(s.title)}</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 10px;">${escapeHTML(s.desc || "")}</p>
+        <div class="tags" style="margin-top: auto;">
+          ${s.tags.slice(0, 3).map(t => `<span class="tag" style="font-size: 0.7rem; padding: 2px 6px;">${escapeHTML(String(t).trim())}</span>`).join("")}
+        </div>
+      `;
+      homeSkillsGrid.appendChild(card);
+    });
   }
 
   // 8. Render Additional About Details on about.html
   const additionalAboutDetails = Array.isArray(content.additionalAboutDetails) ? content.additionalAboutDetails : [];
-  if (additionalAboutDetails.length > 0) {
-    const mainContent = document.querySelector(".main-content .container");
-    if (mainContent && window.location.pathname.includes("about")) {
-      let extraBox = document.getElementById("publicExtraAboutDetails");
-      if (!extraBox) {
-        extraBox = document.createElement("div");
-        extraBox.id = "publicExtraAboutDetails";
-        extraBox.style.marginTop = "28px";
-        extraBox.className = "card";
-        extraBox.innerHTML = `
-          <h2 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-            Additional Details & Academic Highlights
-          </h2>
-          <div id="extraDetailsList" style="display: flex; flex-direction: column; gap: 12px;"></div>
-        `;
-        mainContent.appendChild(extraBox);
-      }
+  const extraBox = document.getElementById("publicExtraAboutDetails");
+  if (extraBox) {
+    if (additionalAboutDetails.length > 0) {
+      extraBox.style.display = "block";
       const list = extraBox.querySelector("#extraDetailsList");
       if (list) {
         list.innerHTML = additionalAboutDetails.map(d => `
-          <div style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
             <strong style="color: #60A5FA; font-size: 0.95rem; display: block; margin-bottom: 4px;">${escapeHTML(d.title)}</strong>
-            <p style="color: var(--text-muted); font-size: 0.875rem; line-height: 1.5;">${escapeHTML(d.desc)}</p>
+            <p style="color: #CBD5E1; font-size: 0.875rem; line-height: 1.5;">${escapeHTML(d.desc)}</p>
           </div>
         `).join("");
       }
+    } else {
+      extraBox.style.display = "none";
     }
   }
 
-  // 8b. Render Education Pathway Records on about.html
+  // 8b. Render Education Pathway Records on about.html & resume.html
   let eduList = content.education;
   if (!Array.isArray(eduList) || eduList.length === 0) {
     try {
@@ -716,44 +896,46 @@ function renderPortfolioContentToDOM(content) {
       if (savedEdu) eduList = JSON.parse(savedEdu);
     } catch (e) {}
   }
-  if (Array.isArray(eduList) && eduList.length > 0 && window.location.pathname.includes("about")) {
-    const mainContent = document.querySelector(".main-content .container");
-    if (mainContent) {
-      let eduBox = document.getElementById("publicEducationPathway");
-      if (!eduBox) {
-        eduBox = document.createElement("div");
-        eduBox.id = "publicEducationPathway";
-        eduBox.style.marginTop = "28px";
-        eduBox.className = "card";
-        eduBox.innerHTML = `
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-            Comprehensive Academic Pathway
-          </h2>
-          <div id="eduPathwayList" style="display: flex; flex-direction: column; gap: 14px;"></div>
-        `;
-        mainContent.appendChild(eduBox);
-      }
-      const pList = eduBox.querySelector("#eduPathwayList");
-      if (pList) {
-        pList.innerHTML = eduList.map(e => `
-          <div style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
-              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0;">${escapeHTML(e.degree || '')}</h3>
-              <span style="font-size: 0.8rem; font-family: var(--font-mono); color: #FCD34D; font-weight: 600;">${escapeHTML(e.year || '')}</span>
-            </div>
-            <div style="font-size: 0.875rem; color: #60A5FA; font-weight: 600; margin-bottom: 4px;">
-              ${escapeHTML(e.institution || '')} ${e.location ? `• <span style="color: var(--text-muted);">${escapeHTML(e.location)}</span>` : ''}
-            </div>
-            ${e.score ? `<div style="font-size: 0.825rem; color: #34D399; font-weight: 600; margin-bottom: 6px;">${escapeHTML(e.score)}</div>` : ''}
-            ${e.details ? `<p style="font-size: 0.875rem; color: var(--text-muted); margin: 0; line-height: 1.5;">${escapeHTML(e.details)}</p>` : ''}
-          </div>
-        `).join("");
-      }
-    }
+  if (!Array.isArray(eduList) || eduList.length === 0) {
+    eduList = [...DEFAULT_EDUCATION];
   }
 
-  // 8c. Render Achievements & Hackathons on about.html & resume.html
+  // Render on about.html (#eduPathwayList)
+  const pList = document.getElementById("eduPathwayList");
+  if (pList) {
+    pList.innerHTML = eduList.map(e => `
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; border-left: 4px solid var(--primary);">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: #FFFFFF; margin: 0;">${escapeHTML(e.degree || '')}</h3>
+          <span style="font-size: 0.8rem; font-family: var(--font-mono); color: #FCD34D; font-weight: 600; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.3);">${escapeHTML(e.year || '')}</span>
+        </div>
+        <div style="font-size: 0.9rem; color: #60A5FA; font-weight: 600; margin-bottom: 4px;">
+          ${escapeHTML(e.institution || '')} ${e.location ? `• <span style="color: var(--text-muted); font-weight: normal;">${escapeHTML(e.location)}</span>` : ''}
+        </div>
+        ${e.score ? `<div style="font-size: 0.85rem; color: #34D399; font-weight: 700; margin-bottom: 6px;">${escapeHTML(e.score)}</div>` : ''}
+        ${e.details ? `<p style="font-size: 0.875rem; color: #CBD5E1; margin: 0; line-height: 1.55;">${escapeHTML(e.details)}</p>` : ''}
+      </div>
+    `).join("");
+  }
+
+  // Render on resume.html (#resumeEducationList)
+  const resumeEduList = document.getElementById("resumeEducationList");
+  if (resumeEduList) {
+    resumeEduList.innerHTML = eduList.map(e => `
+      <div class="resume-item" style="margin-bottom: 16px;">
+        <div class="resume-item-header">
+          <span class="resume-item-title">${escapeHTML(e.degree || '')}</span>
+          <span class="resume-item-date" style="color: #93C5FD; font-weight: 600;">${escapeHTML(e.year || '')}</span>
+        </div>
+        <div class="resume-item-sub">
+          ${escapeHTML(e.institution || '')} ${e.location ? `(${escapeHTML(e.location)})` : ''} ${e.score ? `• <strong style="color: #34D399;">${escapeHTML(e.score)}</strong>` : ''}
+        </div>
+        ${e.details ? `<p class="resume-item-desc" style="color: #94A3B8; margin-top: 4px; font-size: 0.85rem;">${escapeHTML(e.details)}</p>` : ''}
+      </div>
+    `).join("");
+  }
+
+  // 8c. Render Achievements & Hackathons across all public pages
   let achList = content.achievements;
   if (!Array.isArray(achList) || achList.length === 0) {
     try {
@@ -761,37 +943,88 @@ function renderPortfolioContentToDOM(content) {
       if (savedAch) achList = JSON.parse(savedAch);
     } catch (e) {}
   }
-  if (Array.isArray(achList) && achList.length > 0 && (window.location.pathname.includes("about") || window.location.pathname.includes("resume"))) {
-    const mainContent = document.querySelector(".main-content .container") || document.querySelector(".resume-container");
-    if (mainContent) {
-      let achBox = document.getElementById("publicAchievementsSection");
-      if (!achBox) {
-        achBox = document.createElement("div");
-        achBox.id = "publicAchievementsSection";
-        achBox.style.marginTop = "28px";
-        achBox.className = "card";
-        achBox.innerHTML = `
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-            Honors, Competitions & Hackathons
-          </h2>
-          <div id="achievementsDisplayList" style="display: flex; flex-direction: column; gap: 14px;"></div>
-        `;
-        mainContent.appendChild(achBox);
-      }
-      const aList = achBox.querySelector("#achievementsDisplayList");
-      if (aList) {
-        aList.innerHTML = achList.map(a => `
-          <div style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="color: #FCD34D; font-weight: 700; font-size: 1rem;">🏆</span>
-              <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0;">${escapeHTML(a.title || '')}</h3>
+  if (!Array.isArray(achList) || achList.length === 0) {
+    achList = [...DEFAULT_ACHIEVEMENTS];
+  }
+
+  // 1) Render on about.html (#achievementsDisplayList)
+  const aboutAchList = document.getElementById("achievementsDisplayList");
+  if (aboutAchList) {
+    aboutAchList.innerHTML = achList.map(a => `
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+              🏆
             </div>
-            <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0; line-height: 1.55;">${escapeHTML(a.description || '')}</p>
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 700; color: #FFFFFF; margin: 0;">${escapeHTML(a.title || '')}</h3>
+              <span style="font-size: 0.75rem; color: #FCD34D; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Distinction / Award</span>
+            </div>
           </div>
-        `).join("");
-      }
-    }
+          <span class="badge badge-primary" style="font-size: 0.75rem;">Verified Record</span>
+        </div>
+        <p style="font-size: 0.9rem; color: #CBD5E1; margin: 0; line-height: 1.6;">${formatSimpleMarkdown(a.description || '')}</p>
+      </div>
+    `).join("");
+  }
+
+  // 2) Render on index.html (#homeAchievementsGrid)
+  const homeAchGrid = document.getElementById("homeAchievementsGrid");
+  if (homeAchGrid) {
+    homeAchGrid.innerHTML = achList.map(a => `
+      <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+        <div class="card-header-accent"></div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+              🏆
+            </div>
+            <span class="badge badge-primary" style="font-size: 0.725rem;">Honors</span>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px; line-height: 1.35;">${escapeHTML(a.title || '')}</h3>
+          <p style="font-size: 0.88rem; color: #CBD5E1; line-height: 1.55; margin-bottom: 14px;">${formatSimpleMarkdown(a.description || '')}</p>
+        </div>
+        <div style="border-top: 1px solid rgba(69, 137, 255, 0.15); padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.75rem; color: #60A5FA; font-weight: 600;">Technical Recognition</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Karnataka, IN</span>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // 3) Render on certificates.html (#certificatesAchievementsGrid)
+  const certAchGrid = document.getElementById("certificatesAchievementsGrid");
+  if (certAchGrid) {
+    certAchGrid.innerHTML = achList.map(a => `
+      <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;">
+        <div class="card-header-accent"></div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.3rem;">🎖️</span>
+              <span class="cert-card-badge">Competition Award</span>
+            </div>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">${escapeHTML(a.title || '')}</h3>
+          <p style="font-size: 0.88rem; color: #CBD5E1; line-height: 1.55; margin-bottom: 12px;">${formatSimpleMarkdown(a.description || '')}</p>
+        </div>
+        <div style="border-top: 1px solid rgba(69, 137, 255, 0.15); padding-top: 10px; margin-top: auto;">
+          <span style="font-size: 0.775rem; color: #34D399; font-weight: 600;">Accredited Symposium Achievement</span>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // 4) Render on resume.html (#resumeExposureList)
+  const resumeExposureList = document.getElementById("resumeExposureList");
+  if (resumeExposureList) {
+    const achBullets = achList.map(a => {
+      return `<li><strong>${escapeHTML(a.title)}:</strong> ${formatSimpleMarkdown(a.description)}</li>`;
+    });
+    achBullets.push(`<li>Developed an <strong>FPGA-Based UART Transmitter & Receiver</strong> using Verilog HDL and synthesized in Xilinx Vivado.</li>`);
+    achBullets.push(`<li>Designed and simulated a <strong>4-Bit Ripple Carry Adder</strong> and <strong>Binary to Gray Code Converter</strong> in Verilog HDL.</li>`);
+    resumeExposureList.innerHTML = achBullets.join("");
   }
 
   // 9. Hide Deleted Default Certificates

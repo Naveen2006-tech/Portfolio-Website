@@ -196,6 +196,26 @@ async function fetchSupabasePortfolioData(force = false) {
       portfolioContent.customSkills = [];
     }
 
+    // Synchronize achievements from Supabase into achievements
+    if (Array.isArray(data.achievements) && data.achievements.length > 0) {
+      portfolioContent.achievements = data.achievements;
+      try {
+        localStorage.setItem("portfolioAchievements", JSON.stringify(data.achievements));
+      } catch (e) {}
+    } else {
+      portfolioContent.achievements = [];
+    }
+
+    // Synchronize education from Supabase into education
+    if (Array.isArray(data.education) && data.education.length > 0) {
+      portfolioContent.education = data.education;
+      try {
+        localStorage.setItem("portfolioEducation", JSON.stringify(data.education));
+      } catch (e) {}
+    } else {
+      portfolioContent.education = [];
+    }
+
     // Synchronize technical papers from Supabase into customPapers
     const papersFlat = [];
     if (data.technicalPaper && data.technicalPaper.title) {
@@ -208,7 +228,25 @@ async function fetchSupabasePortfolioData(force = false) {
         }
       });
     }
+
+    // Provide verified presentation paper fallback if papers database is currently empty
+    if (papersFlat.length === 0) {
+      const fallbackPaper = {
+        id: "paper_vidyutsava_2k26",
+        title: "Automatic Intelligent Waste Segregation System",
+        event: "VIDYUTSAVA-2K26 - Technical Symposium",
+        date: "May 2026",
+        result: "2nd Place Award Winner",
+        authors: "Naveena K & Co-Presenter",
+        summary: "Technical paper presentation addressing automated waste categorization using intelligent sensing, embedded microcontroller control, and real-time segregation logic.",
+        abstract: "An automated intelligent waste sorting system designed to classify waste materials into recyclable and non-recyclable streams. Utilizes sensor-driven input processing and microcontroller-based automation to streamline sanitation operations.",
+        photos: []
+      };
+      papersFlat.push(fallbackPaper);
+    }
+
     portfolioContent.customPapers = papersFlat;
+    portfolioContent.technicalPapers = papersFlat;
     portfolioContent.technicalPaper = papersFlat[0] || null;
 
     // Cache locally for offline resiliency and fast load
@@ -221,6 +259,8 @@ async function fetchSupabasePortfolioData(force = false) {
       merged.customPapers = Array.isArray(portfolioContent.customPapers) ? portfolioContent.customPapers : [];
       merged.technicalPaper = portfolioContent.technicalPaper || null;
       merged.technicalPapers = Array.isArray(portfolioContent.customPapers) ? portfolioContent.customPapers : [];
+      merged.achievements = Array.isArray(portfolioContent.achievements) ? portfolioContent.achievements : [];
+      merged.education = Array.isArray(portfolioContent.education) ? portfolioContent.education : [];
       merged.projects = merged.customProjects;
       merged.certifications = merged.customCertificates;
       merged.skills = merged.customSkills;
